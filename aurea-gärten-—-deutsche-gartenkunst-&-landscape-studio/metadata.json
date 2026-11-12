@@ -1,0 +1,6 @@
+{
+  "name": "Aurea Gärten — Deutsche Gartenkunst & Landscape Studio",
+  "description": "Cinematic German landscape architecture and bespoke botanical garden design studio across Munich, Berlin, and Hamburg.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

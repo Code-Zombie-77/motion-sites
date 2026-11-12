@@ -1,0 +1,330 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --paper: #ECE8E0;
+    --sheet: #F3F0EA;
+    --ink: #141414;
+    --muted: #6D6A63;
+    --accent: #8B1E2D;
+    --gold: #B08D3C;
+    --rule: rgba(20, 20, 20, 0.9);
+    --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --H: min(46vh, 30vw);
+    --cy: 41%;
+  }
+
+  @media (max-width: 767px) {
+    :root {
+      --H: min(62vw, 38svh);
+      --cy: 43%;
+    }
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--paper);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8 0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.36 0 0 0 0 0.27 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='480' height='480' filter='url(%23p)'/%3E%3C/svg%3E");
+    color: var(--ink);
+    overflow: hidden;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Inter Tight", system-ui, sans-serif;
+  }
+
+  @media (pointer: fine) and (min-width: 768px) {
+    html,
+    body,
+    a,
+    button {
+      cursor: none !important;
+    }
+  }
+}
+
+.font-serif {
+  font-family: "IM Fell English", Georgia, serif;
+}
+
+.font-sans {
+  font-family: "Inter Tight", system-ui, sans-serif;
+}
+
+.font-halftone {
+  font-family: "UnifrakturCook", "IM Fell English", serif;
+  font-weight: 700;
+  writing-mode: vertical-rl;
+  font-size: min(11vh, 7vw);
+  line-height: 1.02;
+  letter-spacing: 0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(139, 30, 45, 0.42);
+  background-image:
+    linear-gradient(180deg, transparent 20%, rgba(243, 240, 234, 0.75) 50%, transparent 80%),
+    repeating-linear-gradient(118deg, rgba(139, 30, 45, 0.5) 0 1px, transparent 1px 4px);
+  background-size: 100% 300%, auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-mask-image: linear-gradient(180deg, #000 42%, transparent 88%);
+  mask-image: linear-gradient(180deg, #000 42%, transparent 88%);
+  animation: engraveLight 11s ease-in-out infinite alternate;
+}
+
+@keyframes engraveLight {
+  from { background-position: 0 0%, 0 0; }
+  to { background-position: 0 100%, 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .font-halftone { animation: none; }
+}
+
+@media (max-width: 767px) {
+  .font-halftone {
+    font-size: 20vw;
+    opacity: 0.8;
+  }
+}
+
+.lbl {
+  font-family: "IM Fell English SC", Georgia, serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+}
+
+.box {
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding: 0 8px;
+  border: 1px solid var(--rule);
+}
+
+/* Paper grain: 220px SVG tile with feTurbulence fractalNoise (.85, 3 octaves, stitchTiles) + feColorMatrix */
+.paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='pg'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.42 0 0 0 0 0.38 0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23pg)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  mix-blend-mode: multiply;
+  opacity: 0.28;
+}
+
+/* Cloth texture: 160px SVG tile with feTurbulence baseFrequency .9 .35, 2 octaves */
+.cloth-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='cg'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.35' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23cg)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+}
+
+/* Page-block texture for fore-edges and tops */
+.page-block-edge {
+  background-image: repeating-linear-gradient(90deg, #efe6d2 0 1.2px, #d9cdb2 1.2px 2px);
+}
+
+.page-block-top {
+  background-image: repeating-linear-gradient(0deg, #efe6d2 0 1.2px, #d9cdb2 1.2px 2px);
+}
+
+/* Leaf paper texture: --sheet with 14 horizontal ink lines (repeating-linear-gradient, 1px, .18 opacity, 11px apart) */
+.leaf-paper {
+  background-color: var(--sheet);
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 10px,
+    rgba(20, 20, 20, 0.18) 10px,
+    rgba(20, 20, 20, 0.18) 11px
+  );
+  background-size: 100% 154px;
+  background-repeat: no-repeat;
+  background-position: center 22%;
+}
+
+/* Shading ::after on 3D book faces */
+.book-face {
+  position: absolute;
+  backface-visibility: hidden;
+  border-radius: 4px;
+}
+
+.book-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #000;
+  opacity: var(--shade, 0);
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+/* Mask slide animation for detail/reader/pricing text lines */
+@keyframes maskRise {
+  0% {
+    transform: translateY(110%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.mask-line-in {
+  animation: maskRise 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mask-line-in {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+  }
+}
+
+.font-fraktur {
+  font-family: "UnifrakturCook", "IM Fell English", serif;
+  font-weight: 700;
+}
+
+/* Book materials: lit relief tiles laid OVER the artwork so ink and foil pick up the grain */
+.mat { position: absolute; inset: 0; pointer-events: none; z-index: 20; border-radius: inherit; }
+.mat-leather {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='l' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.16' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeDiffuseLighting surfaceScale='2.6' lighting-color='%23fff'%3E%3CfeDistantLight azimuth='225' elevation='52'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23l)'/%3E%3C/svg%3E");
+  background-size: 190px 190px;
+  mix-blend-mode: soft-light;
+}
+.mat-card {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035 0.55' numOctaves='4' seed='9' stitchTiles='stitch'/%3E%3CfeDiffuseLighting surfaceScale='1.5' lighting-color='%23fff'%3E%3CfeDistantLight azimuth='250' elevation='60'/%3E%3C/feDiffuseLighting%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23c)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+  opacity: 0.8;
+}
+.mat-cloth {
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0,0,0,.2) 0 1px, rgba(255,255,255,.1) 1px 2px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 1px, rgba(255,255,255,.08) 1px 2px);
+  mix-blend-mode: overlay;
+}
+.bevel {
+  position: absolute; inset: 0; z-index: 21; pointer-events: none; border-radius: inherit;
+  box-shadow: inset 1.5px 1.5px 1px rgba(255,245,225,.3), inset -2px -2px 2px rgba(0,0,0,.42), inset 0 0 16px rgba(0,0,0,.34);
+  background: linear-gradient(118deg, rgba(255,248,230,.2), transparent 38%, transparent 66%, rgba(0,0,0,.24));
+}
+.hinge {
+  position: absolute; inset: 0; z-index: 19; pointer-events: none;
+  background: linear-gradient(90deg, rgba(0,0,0,.16) 0 4.5%, rgba(0,0,0,.42) 6.5%, rgba(255,245,225,.2) 8.2%, transparent 11%);
+}
+.spine-round {
+  position: absolute; inset: 0; z-index: 21; pointer-events: none;
+  background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.08) 18%, rgba(255,245,225,.2) 40%, rgba(0,0,0,.06) 70%, rgba(0,0,0,.6));
+}
+.spine-band {
+  width: 100%; height: 7px; border-radius: 3px;
+  background: linear-gradient(180deg, rgba(255,245,225,.32), rgba(0,0,0,.12) 45%, rgba(0,0,0,.5));
+  box-shadow: 0 2px 2px rgba(0,0,0,.4);
+}
+.foil {
+  background: linear-gradient(105deg, #7d6024, #e7cf86 32%, #a8853a 52%, #f0dea0 70%, #876a2a);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 -0.5px 0 rgba(0,0,0,.55));
+}
+.paper-label {
+  position: relative; background: #eadfc6; padding: 7% 6%;
+  box-shadow: 0 1px 2px rgba(20,14,6,.55);
+  transform: rotate(-0.35deg);
+  outline: 0.5px solid rgba(90,20,30,.6); outline-offset: -3px;
+}
+.press { filter: url(#press); }
+
+.book-contact {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: radial-gradient(closest-side, rgba(18,12,6,.62), rgba(18,12,6,.34) 50%, rgba(18,12,6,.1) 80%, transparent);
+}
+
+.leaf-sheet {
+  background-color: #efe7d4;
+  background-image:
+    linear-gradient(90deg, rgba(50,34,14,.34), rgba(50,34,14,.04) 13%, transparent 30%, transparent 92%, rgba(50,34,14,.1)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 0 0.16 0 0 0 0.2 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23g)'/%3E%3C/svg%3E");
+  box-shadow: inset 0 0 0 .5px rgba(70,50,24,.28);
+}
+.intro-board {
+  position: absolute;
+  border-radius: 4px;
+  box-shadow: 14px 26px 44px -18px rgba(20,14,6,.55), 4px 6px 12px rgba(20,14,6,.25);
+}
+
+/* 3D cart */
+.cart-anchor { position: fixed; right: 4px; bottom: 106px; width: 272px; height: 262px; z-index: 58; pointer-events: none; }
+.cart-roller {
+  position: absolute; inset: 0; background: none; pointer-events: auto; cursor: grab;
+  transform: translateX(100vw);
+  transition: transform 1.1s cubic-bezier(.22,.9,.24,1);
+}
+.cart-roller:active { cursor: grabbing; }
+.cart-roller.is-parked { transform: translateX(0); }
+.cart-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.cart-badge { position: absolute; right: 6px; top: 4px; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 12px; background: #8b1e2d; color: #f3f0ea; font: 400 14px/24px "IM Fell English", serif; box-shadow: 0 2px 5px rgba(20,14,6,.45); }
+.cart-fly { position: fixed; left: 0; top: 0; width: 90px; height: 130px; z-index: 95; border-radius: 3px; overflow: hidden; opacity: 0; pointer-events: none; box-shadow: 10px 22px 30px rgba(20,13,6,.45); }
+.cart-panel {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(390px, 92vw); z-index: 59; padding: 30px 28px; overflow-y: auto;
+  background-color: var(--sheet); box-shadow: -24px 0 60px rgba(20,13,6,.28);
+  transform: translateX(105%); visibility: hidden;
+  transition: transform .7s var(--ease), visibility .7s;
+}
+.cart-panel.is-open { transform: none; visibility: visible; }
+
+/* Directional cast shadow and tight occlusion under each book */
+.book-contact::before {
+  content: "";
+  position: absolute;
+  left: 22%;
+  top: 34%;
+  width: 118%;
+  height: 190%;
+  transform: skewX(-42deg);
+  background: radial-gradient(closest-side, rgba(24,16,8,.15), rgba(24,16,8,.06) 58%, transparent);
+}
+.book-contact::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  top: 42%;
+  height: 16%;
+  background: radial-gradient(closest-side, rgba(10,6,2,.85), transparent);
+}
+/* Soft window light that slides across the board with the pointer */
+.bevel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(70% 55% at var(--glx, 45%) var(--gly, 28%), rgba(255,244,216,.3), rgba(255,244,216,.08) 45%, transparent 72%);
+  mix-blend-mode: soft-light;
+}
+.sp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 22;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,245,225,.1), transparent 22%, transparent 70%, rgba(0,0,0,.34));
+}
+.bk { box-shadow: inset 0 0 26px rgba(0,0,0,.45); }
+
+.cart-thumb { perspective: 420px; flex-shrink: 0; }
+.cart-thumb > div { transform: rotateY(-20deg); transform-origin: 0 50%; transition: transform .45s var(--ease); box-shadow: 6px 7px 12px rgba(20,14,6,.42), inset 0 0 0 .5px rgba(0,0,0,.3); }
+.cart-thumb:hover > div { transform: rotateY(0) scale(1.06); }
+@media (max-width: 767px) {
+  .cart-anchor { right: -18px; bottom: 150px; transform: scale(.6); transform-origin: 100% 100%; }
+}

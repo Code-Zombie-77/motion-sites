@@ -1,0 +1,6 @@
+{
+  "name": "Wendland Bibliothek",
+  "description": "Kuratiertes Bucharchiv klassischer deutscher Literatur und Originalwerke von Elias Wendland.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "NORVA — Der neue Standard im Industrieservice",
+  "description": "Scroll-gesteuerte 3D-Nachtstadt-Präsentation für NORVA Industrieservice: Zertifizierte Instandhaltungsteams, Anlagenservice und schnelle Mobilisierung für kritische Infrastrukturen.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

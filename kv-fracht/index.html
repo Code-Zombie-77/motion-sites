@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KV — Fracht aus einer Hand</title>
+<meta name="description" content="Luft, See, Zoll, Lager und Projektladung aus einer Hand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400..600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/2307e4bf-be39-42b4-b579-e168aeccabf0.jpg">
+<style>
+:root{--u:calc(min(100vw/1440,100vh/960));--edge-px:50vh;--ph:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff;color:#111;overflow-x:clip}
+body{font-family:Archivo,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.track{position:relative;background:#fff}
+.nav{position:absolute;z-index:5;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:calc(var(--u)*26)}
+.logo{font-weight:600;font-size:calc(var(--u)*30);letter-spacing:-.06em}
+.links{display:flex;align-items:center;gap:calc(var(--u)*30);font-weight:500;font-size:max(10px,calc(var(--u)*10));text-transform:uppercase;letter-spacing:.1em}
+.pill{display:inline-flex;align-items:center;height:calc(var(--u)*34);min-height:30px;padding:0 calc(var(--u)*18);border:1px solid currentColor;border-radius:99px;white-space:nowrap}
+.scene{position:sticky;top:0;height:100vh;height:100lvh;overflow:hidden;isolation:isolate;background:#fff}
+video{position:absolute;z-index:0;display:block;object-fit:fill}
+.giant{position:absolute;z-index:1;left:0;bottom:calc(100% - var(--edge-px));font:400 calc(var(--u)*330)/.8 Anton,Impact,sans-serif;color:#e9e9e9;white-space:nowrap;mix-blend-mode:darken;will-change:transform;pointer-events:none}
+.speed{position:absolute;z-index:3;left:calc(var(--u)*26);top:calc(var(--u)*68);font:400 calc(var(--u)*10.5) "JetBrains Mono",monospace;opacity:var(--ph)}
+.band{position:absolute;z-index:2;left:0;right:0;top:var(--edge-px);bottom:0;overflow:hidden;color:#fff}
+.strip{position:absolute;top:calc(var(--u)*96);left:0;display:flex;gap:calc(var(--u)*120);will-change:transform}
+.lead{display:flex;gap:calc(var(--u)*64);flex:none}
+h1{font:400 calc(var(--u)*64)/.98 Anton,Impact,sans-serif;white-space:nowrap;text-transform:uppercase}
+h1 span{display:block}h1 .c{color:#2f63ff}
+.lead div{width:calc(var(--u)*250);font-size:calc(var(--u)*12);line-height:1.5;color:rgba(255,255,255,.62)}
+.lead p+p{margin-top:calc(var(--u)*12)}
+.cards{display:flex;flex:none}
+.card{width:calc(var(--u)*270);padding:0 calc(var(--u)*30);border-left:1px solid rgba(255,255,255,.12)}
+.card:first-child{border-left:0}
+.card svg{display:block;width:calc(var(--u)*38);height:calc(var(--u)*38);fill:none;stroke:#fff;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.card h2,.card p{--s:-40%;color:transparent;background:linear-gradient(90deg,#fff calc(var(--s) - 34%),#2f63ff calc(var(--s) - 6%),transparent calc(var(--s) + 26%));-webkit-background-clip:text;background-clip:text}
+.card h2{margin-top:calc(var(--u)*22);font:400 calc(var(--u)*26)/1.08 Anton,Impact,sans-serif;text-transform:uppercase}
+.card p{margin-top:calc(var(--u)*12);font-size:calc(var(--u)*12.4);line-height:1.45}
+.bpill{position:absolute;left:50%;bottom:calc(var(--u)*36);font-weight:500;font-size:max(10px,calc(var(--u)*10));text-transform:uppercase;letter-spacing:.1em;opacity:var(--ph);transform:translate(-50%,calc((1 - var(--ph))*24px));transition:opacity .5s,transform .5s}
+@media (max-width:767px),(orientation:portrait){
+ :root{--u:min(calc(100vw/430),1.4px)}
+ .giant{font-size:calc(var(--u)*180)}
+ .speed{left:20px;top:22px;font-size:11px}
+ .nav{padding:18px 20px}.logo{font-size:28px}.follow{display:none}
+ .strip{top:calc(var(--u)*72);gap:calc(var(--u)*56);padding-left:22px}
+ .lead{flex-direction:column;gap:calc(var(--u)*20)}
+ h1{font-size:calc(var(--u)*46)}
+ .lead div{width:calc(var(--u)*300);font-size:calc(var(--u)*13)}
+ .card{width:calc(var(--u)*250)}.card h2{font-size:calc(var(--u)*26)}.card p{font-size:calc(var(--u)*13)}
+}
+/* Slim road under the truck, real video wheels, tint that keeps the container's own shading */
+.road{position:absolute;left:0;right:0;top:0;height:calc(var(--u)*64);opacity:var(--ph);transition:opacity .6s;background-color:#2e2f32;background-image:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,0) 16%),linear-gradient(180deg,rgba(16,16,18,0) 62%,#101012),linear-gradient(180deg,rgba(0,0,0,0) 36%,rgba(0,0,0,.2) 42%,rgba(0,0,0,.2) 54%,rgba(0,0,0,0) 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 -.16'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.5' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 -.62'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23c)'/%3E%3C/svg%3E")}
+.band::before{content:'';position:absolute;inset:0;opacity:var(--ph);transition:opacity .6s;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 -.16'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E") #101012;background-blend-mode:soft-light}
+video{filter:contrast(1.13) saturate(1.05)}
+.wheel{filter:contrast(1.2)}
+.sheen{mix-blend-mode:overlay;background-image:linear-gradient(100deg,rgba(255,255,255,0) 28%,rgba(255,255,255,.75) 46%,rgba(255,255,255,0) 62%),linear-gradient(180deg,rgba(255,255,255,.4),rgba(127,127,127,0) 38%,rgba(0,0,0,.42));background-size:70% 100%,100% 100%;background-repeat:repeat-x,no-repeat}
+.giant{color:transparent;background:linear-gradient(180deg,#f3f4f5,#d3d5d9 58%,#e6e7e9);-webkit-background-clip:text;background-clip:text}
+.card{border-left:1px solid;border-image:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.05)) 1}
+.lane{position:absolute;left:0;right:0;top:calc(var(--u)*20);height:max(1px,calc(var(--u)*2));opacity:calc(var(--ph)*.5);background:linear-gradient(90deg,#fff 37%,transparent 0) 0 0/calc(var(--u)*150) 100% repeat-x;will-change:background-position}
+.tint{position:absolute;z-index:1;opacity:var(--ph);pointer-events:none;transition:opacity .6s,background-color .7s}
+#tc{mix-blend-mode:color}
+.wheel{position:absolute;z-index:2;opacity:var(--ph);transition:opacity .4s;pointer-events:none;transform:translate(-50%,-50%)}
+.card small{display:block;margin-top:calc(var(--u)*14);font:400 calc(var(--u)*10.5)/1.3 "JetBrains Mono",monospace;color:#fff;opacity:.72}
+.lead{align-self:flex-start}
+</style>
+</head>
+<body>
+<div class="track" id="track">
+  <nav class="nav" aria-label="Hauptmenü">
+    <a class="logo" href="#">KV</a>
+    <div class="links"><a href="#">→ Menü</a><a class="follow" href="#">Folgen</a><a class="pill" href="mailto:kontakt@example.com">Anfrage senden</a></div>
+  </nav>
+  <div class="scene" id="scene">
+    <video id="v" muted playsinline preload="auto" aria-hidden="true" poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/2307e4bf-be39-42b4-b579-e168aeccabf0.jpg"></video>
+    <div class="giant" id="giant" aria-hidden="true">UNSERE LEISTUNGEN</div>
+    <div class="tint" id="tc"></div><div class="tint sheen" id="sh"></div><div class="tint sheen" id="shc"></div>
+    <canvas class="wheel"></canvas><canvas class="wheel"></canvas><canvas class="wheel"></canvas><canvas class="wheel"></canvas><canvas class="wheel"></canvas>
+    <div class="speed" id="speed" aria-hidden="true">00 KM/H</div>
+    <div class="band"><div class="road" id="road"></div><div class="lane" id="lane"></div>
+      <div class="strip" id="strip">
+        <div class="lead">
+          <h1><span>Alles für</span><span>Ihre Fracht.</span><span class="c">Aus einer Hand.</span></h1>
+          <div><p>Luft, See, Zoll und die letzte Meile: Wir kennen jeden Abschnitt Ihrer Lieferkette aus der täglichen Arbeit.</p><p>Sie haben einen Ansprechpartner und sehen jederzeit, wo Ihre Sendung gerade ist.</p></div>
+        </div>
+        <div class="cards" id="cards">
+          <article class="card"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M34 5c-2-2-5-1-7 1l-6 6-15-4-2 2 12 7-6 6-5-1-2 2 6 4 4 6 2-2-1-5 6-6 7 12 2-2-4-15 6-6c2-2 3-5 1-5z"/></svg><h2>Luft-<br>fracht</h2><p>Express, Priority und Deferred auf den wichtigen Strecken, gebucht und verfolgt bis zur Zustellung.</p><small>Ab Frankfurt und München</small></article>
+          <article class="card"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M4 23h30l-4 9H8zM9 23v-8h20v8M15 15V8h8v7M19 8V4M3 35c3-2 5-2 8 0s5 2 8 0 5-2 8 0 5 2 8 0"/></svg><h2>See-<br>fracht</h2><p>FCL und LCL auf allen großen Routen. Die Reederei wählen wir nach Kosten und Laufzeit.</p><small>Ab Hamburg und Bremerhaven</small></article>
+          <article class="card"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M23 3H8v32h22V10zM23 3v7h7M13 22l4 4 8-9"/></svg><h2>Zoll-<br>abfertigung</h2><p>Eigene Zollfachleute für Tarifierung, Abgaben und Beschau, damit Ihre Ware beim ersten Mal durchgeht.</p><small>Einfuhr und Ausfuhr</small></article>
+          <article class="card"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M3 35V14L19 5l16 9v21M9 35V19h20v16M9 25h20M9 30h20"/></svg><h2>Lager und<br>Logistik</h2><p>Zolllager und allgemeine Lagerung, Kommissionierung und Verteilung, direkt an den Transport angebunden.</p><small>Duisburg und Leipzig</small></article>
+          <article class="card"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M19 3v9M19 12a4 4 0 1 1-4 4M8 26h22l3 9H5zM19 20v6"/></svg><h2>Projekt-<br>ladung</h2><p>Übergroße und schwere Transporte, geplant, genehmigt und begleitet vom Werk bis zum Fundament.</p><small>Schwertransporte in ganz Europa</small></article>
+        </div>
+      </div>
+      <a class="bpill pill" href="#cards">Unsere Leistungen</a>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+const q=new URLSearchParams(location.search),rec=q.get('rec')==='1';
+const $=s=>document.getElementById(s),v=$('v'),track=$('track'),strip=$('strip'),giant=$('giant'),speed=$('speed'),root=document.documentElement;
+const cards=[...document.querySelectorAll('.card')].map(el=>({el,h:el.querySelector('h2'),p:el.querySelector('p'),x:0}));
+const base='https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/';
+v.src=base+(innerWidth<=900?'b3718419-7a0a-478d-bfb0-0ff8bef7f3f7.mp4':'409763c0-95f4-49d3-a601-dc564d55072b.mp4');
+const wheels=[...document.querySelectorAll('.wheel')],WH=[[.2567,.4248],[.2948,.4248],[.3329,.4248],[.5059,.4248],[.6184,.4248]];
+const PAL=['transparent','#2a55c8','#a8553a','#2a7f70','#b08a30','#84405c'];let palI=-1;
+const A=2.4;let vw,vh,B=1,sw=0,lw=0;
+const clamp=(n,a=0,b=1)=>Math.min(b,Math.max(a,n));
+function layout(){
+ vw=root.clientWidth;vh=$('scene').offsetHeight;
+ const portrait=vw<768||vw<=vh;let w,h,l,t;
+ if(portrait){w=1.55*vw;h=w*9/16;l=vw/2-.4*w;t=.36*vh-.448*h}
+ else{const s=Math.max(vw/1920,vh/1080);w=1920*s;h=1080*s;l=(vw-w)/2;t=(vh-h)/2}
+ v.style.cssText=`left:${l}px;top:${t}px;width:${w}px;height:${h}px`;
+ const put=(el,x0,y0,x1,y1)=>{el.style.left=l+x0*w+'px';el.style.top=t+y0*h+'px';el.style.width=(x1-x0)*w+'px';el.style.height=(y1-y0)*h+'px'};
+ put($('tc'),.1658,.2735,.5592,.3925);put($('sh'),.1658,.2735,.5592,.3925);put($('shc'),.5785,.268,.6575,.392);
+ const dpr=Math.min(2,devicePixelRatio||1);wheels.forEach((e,i)=>{const[x,y]=WH[i],d=.0316*w;e.style.left=l+x*w+'px';e.style.top=t+y*h+'px';e.style.width=d+'px';e.style.height=d+'px';e.width=e.height=Math.round(d*dpr)});
+ const edge=t+.448*h;root.style.setProperty('--edge-px',edge+'px');
+ $('scene').style.background=`linear-gradient(#fff ${t+.5*h}px,#111 ${t+.5*h}px)`;
+ sw=strip.scrollWidth;lw=giant.scrollWidth;
+ B=(sw+.45*vw)/vw*1.1;track.style.height=(1+A+B)*vh+'px';
+ const pad=strip.getBoundingClientRect().left-new DOMMatrix(getComputedStyle(strip).transform).m41;
+ cards.forEach(c=>{let x=0,e=c.el;while(e&&e!==strip){x+=e.offsetLeft;e=e.offsetParent}c.x=x+pad});
+}
+let cur=0,target=0,seeking=false,lastY=scrollY,lastT=performance.now(),vel=0,forced=null;
+const dur=()=>v.duration||4.04;
+v.addEventListener('seeked',()=>{seeking=false;seek()});
+function seek(){if(rec||seeking||v.readyState<1)return;if(Math.abs(v.currentTime-cur)>1/60){seeking=true;v.currentTime=cur}}
+function apply(y){
+ const qq=clamp(y/(A*vh));target=qq*(dur()-1/48);
+ root.style.setProperty('--ph',qq>=.94&&(rec||v.currentTime>=3.72)?1:0);
+ const r=clamp((y-A*vh)/(B*vh)),tx=vw-r*(sw+.45*vw);
+ strip.style.transform=`translate3d(${tx}px,0,0)`;
+ giant.style.transform=`translate3d(${vw-r*(lw+vw)}px,0,0)`;
+ $('lane').style.backgroundPositionX=-y*1.6+'px';$('road').style.backgroundPositionX=`0,0,0,${-y*1.6}px,${-y*1.6}px`;$('sh').style.backgroundPositionX=$('shc').style.backgroundPositionX=`${y*.4}px,0`;
+ const rot=y*.55*Math.PI/180,vw2=v.videoWidth,vh2=v.videoHeight;if(vw2&&v.readyState>=2)wheels.forEach((c,i)=>{const g=c.getContext('2d'),S=c.width,sd=.0316*vw2;g.save();g.clearRect(0,0,S,S);g.translate(S/2,S/2);g.beginPath();g.arc(0,0,S/2-.5,0,7);g.clip();g.rotate(rot);g.drawImage(v,WH[i][0]*vw2-sd/2,WH[i][1]*vh2-sd/2,sd,sd,-S/2,-S/2,S,S);g.restore()});
+ const pi=r<=0?0:Math.min(PAL.length-1,1+Math.floor(r*5));if(pi!==palI){palI=pi;$('tc').style.backgroundColor=PAL[pi]}
+ for(const c of cards){const left=c.x+tx;if(left>vw*1.5||left<-vw)continue;const s=clamp((.98-left/vw)/.3,-.4,1.6)*100+'%';c.h.style.setProperty('--s',s);c.p.style.setProperty('--s',s)}
+}
+function showSpeed(n){speed.textContent=String(Math.min(99,Math.round(n))).padStart(2,'0')+' KM/H'}
+function tick(now){
+ requestAnimationFrame(tick);if(rec)return;
+ const y=scrollY,dt=Math.max(1,now-lastT);vel+=(Math.abs(y-lastY)/dt*1000/32-vel)*.12;lastY=y;lastT=now;
+ apply(y);showSpeed(vel);
+ cur+=(target-cur)*.2;seek();
+}
+addEventListener('resize',layout);
+layout();document.fonts&&document.fonts.ready.then(layout);addEventListener('load',layout);
+if(rec){
+ const dummy=document.createElement('i');document.body.append(dummy);
+ const an=dummy.animate([{opacity:0,offset:0,easing:'linear'},{opacity:0,offset:.04,easing:'cubic-bezier(.4,.05,.55,.95)'},{opacity:1,offset:.96,easing:'linear'},{opacity:1,offset:1}],{duration:11000,fill:'both'});an.pause();
+ let py=0;window.__recTime=(video,t)=>{an.currentTime=t*1000;const p=+getComputedStyle(dummy).opacity,y=p*(track.offsetHeight-vh);scrollTo(0,y);apply(y);showSpeed(Math.abs(y-py)*30/32);py=y;return clamp(y/(A*vh))*(dur()-1/48)};
+}
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wendland Bibliothek</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Playfair+Display:wght@900&display=block" rel="stylesheet" />
+<style>
+:root {
+  --paper: #ECE8E0;
+  --sheet: #F3F0EA;
+  --ink: #141414;
+  --muted: #6D6A63;
+  --accent: #8B1E2D;
+  --gold: #B08D3C;
+  --rule: rgba(20, 20, 20, 0.9);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --H: min(46vh, 30vw);
+  --cy: 41%;
+}
+@media (max-width: 767px) {
+  :root {
+    --H: min(62vw, 38svh);
+    --cy: 43%;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: var(--paper); color: var(--ink);
+  overflow: hidden; user-select: none;
+  -webkit-font-smoothing: antialiased;
+  font-family: "Inter Tight", system-ui, sans-serif;
+}
+@media (pointer: fine) and (min-width: 768px) {
+  html, body, a, button { cursor: none !important; }
+}
+.lbl {
+  font-family: "Inter Tight", system-ui, sans-serif;
+  font-weight: 600; font-size: 10.5px; line-height: 1;
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.box {
+  display: inline-flex; align-items: center;
+  height: 21px; padding: 0 8px;
+  border: 1px solid var(--rule);
+  background: transparent;
+}
+</style>
+</head>
+<body>
+<script>
+const BOOKS = [
+  {
+    "index": 0,
+    "id": "werther",
+    "title": "Die Leiden des jungen Werthers",
+    "author": "Johann Wolfgang von Goethe",
+    "surname": "GOETHE",
+    "year": 1774,
+    "genre": "Briefroman",
+    "pages": 160,
+    "kind": "classic",
+    "clothBg": "#1B2A49",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Die Briefe eines jungen Mannes aus einem Landdorf zeichnen eine Liebe nach, die er nicht haben kann, und ein Gefühl, das er nicht überlebt."
+  },
+  {
+    "index": 1,
+    "id": "sandmann",
+    "title": "Der Sandmann",
+    "author": "E. T. A. Hoffmann",
+    "surname": "HOFFMANN",
+    "year": 1816,
+    "genre": "Schauererzählung",
+    "pages": 90,
+    "kind": "classic",
+    "clothBg": "#141414",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Ein Student wird von einem Kindheitsschrecken heimgesucht, der in Gestalt eines Wetterglashändlers und einer täuschend lebendigen Puppe wiederkehrt."
+  },
+  {
+    "index": 2,
+    "id": "schimmelreiter",
+    "title": "Der Schimmelreiter",
+    "author": "Theodor Storm",
+    "surname": "STORM",
+    "year": 1888,
+    "genre": "Novelle",
+    "pages": 140,
+    "kind": "classic",
+    "clothBg": "#14383B",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Ein Deichgraf kämpft gegen das Meer und seine Nachbarn, um einen neuen Deich zu errichten, und das Dorf erinnert sich an ihn als Geist auf einem weißen Pferd."
+  },
+  {
+    "index": 3,
+    "id": "effi",
+    "title": "Effi Briest",
+    "author": "Theodor Fontane",
+    "surname": "FONTANE",
+    "year": 1895,
+    "genre": "Gesellschaftsroman",
+    "pages": 330,
+    "kind": "classic",
+    "clothBg": "#EFE6D2",
+    "clothFg": "#141414",
+    "isLightCloth": true,
+    "synopsisDe": "Eine junge Ehefrau in einer abgelegenen Stadt an der Ostsee wird von einer Gesellschaft gerichtet, die niemals vergisst, was sie einst verzieh."
+  },
+  {
+    "index": 4,
+    "id": "venedig",
+    "title": "Der Tod in Venedig",
+    "author": "Thomas Mann",
+    "surname": "MANN",
+    "year": 1912,
+    "genre": "Novelle",
+    "pages": 100,
+    "kind": "classic",
+    "clothBg": "#C79A3B",
+    "clothFg": "#141414",
+    "isLightCloth": true,
+    "synopsisDe": "Ein alternder Schriftsteller auf Reisen in Venedig verfällt dem Anblick eines schönen Knaben, während die Stadt im Stillen erkrankt."
+  },
+  {
+    "index": 5,
+    "id": "verwandlung",
+    "title": "Die Verwandlung",
+    "author": "Franz Kafka",
+    "surname": "KAFKA",
+    "year": 1915,
+    "genre": "Erzählung",
+    "pages": 90,
+    "kind": "classic",
+    "clothBg": "#5C141E",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Ein Handlungsreisender erwacht eines Morgens verwandelt, und seine Familie beschließt langsam, was er nun noch wert ist."
+  },
+  {
+    "index": 6,
+    "id": "schach",
+    "title": "Schachnovelle",
+    "author": "Stefan Zweig",
+    "surname": "ZWEIG",
+    "year": 1942,
+    "genre": "Novelle",
+    "pages": 80,
+    "kind": "classic",
+    "clothBg": "#EAE1CE",
+    "clothFg": "#141414",
+    "isLightCloth": true,
+    "synopsisDe": "Auf einem Dampfer nach Buenos Aires spielt ein geheimnisvoller Passagier gegen den Schachweltmeister und offenbart, was die Einzelhaft seinem Geist angetan hat."
+  },
+  {
+    "index": 7,
+    "id": "glasberg",
+    "title": "Der Wanderer am Glasberg",
+    "author": "Elias Wendland",
+    "surname": "ELIAS WENDLAND",
+    "year": 1957,
+    "genre": "Entwicklungsroman",
+    "pages": 312,
+    "kind": "original",
+    "clothBg": "#5B7C99",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Der Sohn einesflickschusters verlässt sein Dorf, um einen Berg aus Glas zu besteigen, und lernt in jedem Tal, was er aufgeben muss, um weiterzugehen."
+  },
+  {
+    "index": 8,
+    "id": "weissfluss",
+    "title": "Stille am Weißen Fluss",
+    "author": "Elias Wendland",
+    "surname": "ELIAS WENDLAND",
+    "year": 1963,
+    "genre": "Kriegsroman",
+    "pages": 288,
+    "kind": "original",
+    "clothBg": "#434A52",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Drei Soldaten halten eine Brücke in einem Winter, den niemand beim Namen nennt, und die Stille zwischen den Einschlägen wird zum eigentlichen Feind."
+  },
+  {
+    "index": 9,
+    "id": "zeugen",
+    "title": "Ein Tag ohne Zeugen",
+    "author": "Elias Wendland",
+    "surname": "ELIAS WENDLAND",
+    "year": 1972,
+    "genre": "Zeitroman",
+    "pages": 264,
+    "kind": "original",
+    "clothBg": "#B88928",
+    "clothFg": "#141414",
+    "isLightCloth": true,
+    "synopsisDe": "Eine Schreibkraft in einer kleinen Stadt verbringt einen gewöhnlichen Tag unter den Blicken von Leuten, die beteuern, nichts gesehen zu haben."
+  },
+  {
+    "index": 10,
+    "id": "geruch",
+    "title": "Der Geruchskartograf",
+    "author": "Elias Wendland",
+    "surname": "ELIAS WENDLAND",
+    "year": 1985,
+    "genre": "Sinnesroman",
+    "pages": 340,
+    "kind": "original",
+    "clothBg": "#7A3542",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Ein Kartenzeichner mit einer außergewöhnlichen Nase vermisst eine Stadt nach ihren Gerüchen und entdeckt die Gasse, die ihn niemand betreten lässt."
+  },
+  {
+    "index": 11,
+    "id": "uhrmacher",
+    "title": "Der Uhrmacher von Jena",
+    "author": "Elias Wendland",
+    "surname": "ELIAS WENDLAND",
+    "year": 2005,
+    "genre": "Historischer Roman",
+    "pages": 392,
+    "kind": "original",
+    "clothBg": "#1E3B2B",
+    "clothFg": "#EFE6D2",
+    "isLightCloth": false,
+    "synopsisDe": "Zwei Uhrmacher im Jena des achtzehnten Jahrhunderts bauen eine Maschine zur Messung der Zeit und entzweien sich darüber, wem die Minuten gehören."
+  }
+];
+const PRICE = {
+  "classic": {
+    "pdf": 0,
+    "ebook": 2.99,
+    "paperback": 6.9,
+    "hardcover": 18
+  },
+  "original": {
+    "pdf": 0,
+    "ebook": 8.99,
+    "paperback": 14.9,
+    "hardcover": 24
+  }
+};
+const SAMPLE = {
+  "werther": {
+    "pages": [
+      [
+        "Am 4. Mai 1771. Wie froh bin ich, daß ich weg bin! Bester Freund, was ist das Herz des Menschen! Dich zu verlassen, den ich so liebe, von dem ich unzertrennlich war, und froh zu sein! Ich weiß, du verzeihst mir’s. Waren nicht meine übrigen Verbindungen recht ausgesucht vom Schicksal, um ein Herz wie das meine zu ängstigen? Die arme Leonore! Und doch war ich unschuldig. Konnt’ ich dafür, daß, während die eigensinnigen Reize ihrer Schwester mir eine angenehme Unterhaltung verschafften, daß eine Leidenschaft in dem armen Herzen sich bildete? Und doch – bin ich ganz unschuldig? Hab’ ich nicht ihre Empfindungen genährt? Hab’ ich mich nicht an den ganz wahren Ausdrücken der Natur ergötzt, die uns so oft zu lachen machten, so wenig lächerlich sie waren?",
+        "Hab’ ich nicht – O was ist der Mensch, daß er über sich klagen darf! Ich will, lieber Freund, ich verspreche dir’s, ich will mich bessern, will nicht mehr ein bißchen Übel, das das Schicksal uns vorlegt, wiederkäuen, wie ich’s immer getan habe; ich will das Gegenwärtige genießen, und das Vergangene soll mir vergangen sein. Gewiß, du hast recht, Bester, der Schmerzen wären minder unter den Menschen, wenn sie nicht – Gott weiß, warum sie so gemacht sind! – mit so viel Emsigkeit der Einbildungskraft sich beschäftigten, die Erinnerungen des vergangenen Übels zurückzurufen, eher als eine gleichgültige Gegenwart zu ertragen."
+      ],
+      [
+        "Du bist so gut, meiner Mutter zu sagen, daß ich ihr Geschäft bestens betreiben und ihr ehstens Nachricht davon geben werde. Ich habe meine Tante gesprochen und bei weitem das böse Weib nicht gefunden, das man bei uns aus ihr macht. Sie ist eine muntere, heftige Frau von dem besten Herzen. Ich erklärte ihr meiner Mutter Beschwerden wegen des zurückgehaltenen Erbschaftsanteils; sie sagte mir ihre Gründe, Ursachen und die Bedingungen, unter welchen sie bereit wäre, alles herauszugeben, und mehr als wir verlangten – Kurz, ich mag jetzt nichts davon schreiben, sage meiner Mutter, es werde alles gut gehen. Und ich habe, mein Lieber, wieder bei diesem kleinen Geschäft gefunden, daß Mißverständnisse und Trägheit vielleicht mehr Irrungen in der Welt machen als List und Bosheit. Wenigstens sind die beiden letzteren gewiß seltener.",
+        "Übrigens befinde ich mich hier gar wohl. Die Einsamkeit ist meinem Herzen köstlicher Balsam in dieser paradiesischen Gegend, und diese Jahreszeit der Jugend wärmt mit aller Fülle mein oft schauderndes Herz. Jeder Baum, jede Hecke ist ein Strauß von Blüten, und man möchte zum Maienkäfer werden, um in dem Meer von Wohlgerüchen herumschweben und alle seine Nahrung darin finden zu können."
+      ],
+      [
+        "Die Stadt selbst ist unangenehm, dagegen rings umher eine unaussprechliche Schönheit der Natur. Das bewog den verstorbenen Grafen von M., einen Garten auf einem der Hügel anzulegen, die mit der schönsten Mannigfaltigkeit sich kreuzen und die lieblichsten Täler bilden. Der Garten ist einfach, und man fühlt gleich bei dem Eintritte, daß nicht ein wissenschaftlicher Gärtner, sondern ein fühlendes Herz den Plan gezeichnet, das seiner selbst hier genießen wollte. Schon manche Träne hab’ ich dem Abgeschiedenen in dem verfallenen Kabinettchen geweint, das sein Lieblingsplätzchen war und auch meines ist. Bald werde ich Herr vom Garten sein; der Gärtner ist mir zugetan, nur die paar Tage her, und er wird sich nicht übel dabei befinden.",
+        "Am 10. Mai. Eine wunderbare Heiterkeit hat meine ganze Seele eingenommen, gleich den süßen Frühlingsmorgen, die ich mit ganzem Herzen genieße. Ich bin allein und freue mich meines Lebens in dieser Gegend, die für solche Seelen geschaffen ist wie die meine. Ich bin so glücklich, mein Bester, so ganz in dem Gefühle von ruhigem Dasein versunken, daß meine Kunst darunter leidet. Ich könnte jetzt nicht zeichnen, nicht einen Strich, und bin nie ein größerer Maler gewesen als in diesen Augenblicken."
+      ],
+      [
+        "Wenn das liebe Tal um mich dampft, und die hohe Sonne an der Oberfläche der undurchdringlichen Finsternis meines Waldes ruht, und nur einzelne Strahlen sich in das innere Heiligtum stehlen, ich dann im hohen Grase am fallenden Bache liege, und näher an der Erde tausend mannigfaltige Gräschen mir merkwürdig werden; wenn ich das Wimmeln der kleinen Welt zwischen Halmen, die unzähligen, unergründlichen Gestalten der Würmchen, der Mückchen näher an meinem Herzen fühle, und fühle die Gegenwart des Allmächtigen, der uns nach seinem Bilde schuf, das Wehen des Allliebenden, der uns in ewiger Wonne schwebend trägt und erhält; mein Freund!",
+        "Wenn’s dann um meine Augen dämmert, und die Welt um mich her und der Himmel ganz in meiner Seele ruhn wie die Gestalt einer Geliebten – dann sehne ich mich oft und denke: Ach könntest du das wieder ausdrücken, könntest du dem Papiere das einhauchen, was so voll, so warm in dir lebt, daß es würde der Spiegel deiner Seele, wie deine Seele ist der Spiegel des unendlichen Gottes! – Mein Freund – Aber ich gehe darüber zugrunde, ich erliege unter der Gewalt der Herrlichkeit dieser Erscheinungen."
+      ]
+    ]
+  },
+  "sandmann": {
+    "pages": [
+      [
+        "Nathanael an Lothar. Gewiß seid Ihr alle voll Unruhe, daß ich so lange – lange nicht geschrieben. Mutter zürnt wohl, und Clara mag glauben, ich lebe hier in Saus und Braus und vergesse ganz und gar mein holdes Engelsbild, so tief mir in Herz und Sinn eingeprägt. – Dem ist aber nicht so; täglich und stündlich gedenke ich Eurer aller, und in süßen Träumen geht meines holden Clärchens freundliche Gestalt vorüber und lächelt mich mit ihren hellen Augen so anmutig an, wie sie wohl pflegte, wenn ich zu Euch hineintrat.",
+        "Ach wie vermochte ich denn Euch zu schreiben, in der zerrissenen Stimmung des Geistes, die mir bisher alle Gedanken verstörte! – Entsetzliches hat sich zugetragen in mein Leben! – Dunkle Ahnungen eines gräßlichen, mir drohenden Geschicks breiten sich wie schwarze Wolkenschatten über mich aus, undurchdringlich jedem freundlichen Sonnenstrahl. – Nun soll ich dir sagen, was mir widerfuhr. Ich muß es, das sehe ich ein, aber nur daran denkend, lacht es wie toll aus mir heraus. – Ach mein herzlieber Lothar! wie fange ich es denn an, dich nur einigermaßen empfinden zu lassen, daß das, was mir vor einigen Tagen geschah, denn wirklich mein Leben so feindlich zerstören konnte!"
+      ],
+      [
+        "Wärst du nur hier, so könntest du selbst schauen; aber jetzt hältst du mich gewiß für einen aberwitzigen Geisterseher. – Kurz und gut, das Entsetzliche, was mir geschah, dessen tödlichen Eindruck zu verwinden ich vergebens mich mühe, besteht in nichts anderm, als daß vor einigen Tagen, nämlich am 30. Oktober mittags um 12 Uhr, ein Wetterglashändler in meine Stube trat und mir seine Ware anbot. Ich kaufte nichts und drohte, ihn die Treppe herabzuwerfen, worauf er aber von selbst fortging.",
+        "Du ahnest, daß nur ganz eigne, tief in mein Leben eingreifende Beziehungen dieser Begebenheit Bedeutung geben können, ja, daß wohl die Person jenes unglückseligen Krämers gar feindlich auf mich wirken muß. So ist es in der Tat. Mit aller Kraft fasse ich mich zusammen, um ruhig und geduldig dir aus meiner früheren Jugendzeit so viel zu erzählen, daß deinem regen Sinn alles klar und deutlich in leuchtenden Bildern aufgehen wird. Indem ich anfangen will, höre ich dich lachen und Clara sagen: „Das sind ja rechte Kindereien!“ – Lacht, ich bitte Euch, lacht mich recht herzlich aus!"
+      ],
+      [
+        "Außer dem Mittagessen sahen wir, ich und meine kleinen Geschwister, tagüber den Vater wenig. Er mochte mit seinem Dienst viel beschäftigt sein. Nach dem Abendessen, das alter Sitte gemäß schon um sieben Uhr aufgetragen wurde, gingen wir alle, die Mutter mit uns, in des Vaters Arbeitsstube und setzten uns um einen runden Tisch. Der Vater rauchte Tabak und trank ein großes Glas Bier dazu. Oft erzählte er uns viele wunderbare Geschichten und geriet darüber so in Eifer, daß ihm die Pfeife immer ausging, die ich, ihm brennend Papier hinhaltend, wieder anzünden mußte, welches mir denn ein Hauptspaß war.",
+        "Oft gab er uns aber Bilderbücher in die Hände, saß stumm und starr in seinem Lehnstuhl und blies starke Dampfwolken von sich, daß wir alle wie im Nebel schwammen. An solchen Abenden war die Mutter sehr traurig, und kaum schlug die Uhr neun, so sprach sie: „Nun Kinder! – zu Bette! zu Bette! der Sandmann kommt, ich merk’ es schon.“ Wirklich hörte ich dann jedesmal etwas schweren langsamen Tritts die Treppe heraufpoltern; das mußte der Sandmann sein."
+      ],
+      [
+        "Einmal war mir jenes dumpfe Treten und Poltern besonders graulich; ich frug die Mutter, indem sie uns fortführte: „Ei Mama! wer ist denn der böse Sandmann, der uns immer von Papa forttreibt? – wie sieht er denn aus?“ „Es gibt keinen Sandmann, mein liebes Kind“, erwiderte die Mutter; „wenn ich sage, der Sandmann kommt, so will das nur heißen, ihr seid schläfrig und könnt die Augen nicht offen behalten, als hätte man euch Sand hineingestreut.“ – Der Mutter Antwort befriedigte mich nicht, ja in meinem kindischen Gemüt entfaltete sich deutlich der Gedanke, daß die Mutter den Sandmann nur verleugne, damit wir uns vor ihm nicht fürchten sollten, ich hörte ihn ja immer die Treppe heraufkommen.",
+        "Voll Neugierde, Näheres von diesem Sandmann und seiner Beziehung auf uns Kinder zu erfahren, frug ich endlich die alte Frau, die meine jüngste Schwester wartete: was denn das für ein Mann sei, der Sandmann? „Ei Thanelchen“, erwiderte diese, „weißt du das noch nicht? Das ist ein böser Mann, der kommt zu den Kindern, wenn sie nicht zu Bett gehen wollen, und wirft ihnen Hände voll Sand in die Augen, daß sie blutig zum Kopf herausspringen, die wirft er dann in den Sack und trägt sie in den Halbmond zur Atzung für seine Kinderchen; die sitzen dort im Nest und haben krumme Schnäbel, wie die Eulen, damit picken sie der unartigen Menschenkindlein Augen auf.“"
+      ]
+    ]
+  },
+  "schimmelreiter": {
+    "pages": [
+      [
+        "Was ich zu berichten beabsichtige, ist mir vor reichlich einem halben Jahrhundert im Hause meiner Urgroßmutter, der alten Frau Senator Feddersen, kundgeworden, während ich, an ihrem Lehnstuhl sitzend, mich mit dem Lesen eines in blauer Pappe eingebundenen Zeitschriftenheftes beschäftigte; ich vermag mich nicht mehr zu entsinnen, ob von den „Leipziger“ oder von „Pappes Hamburger Lesefrüchten“. Noch fühl ich es gleich einem Schauer, wie dabei die linde Hand der über Achtzigjährigen mitunter liebkosend über mein Haupthaar glitt.",
+        "Sie selbst und jene Zeit sind längst begraben; vergebens auch habe ich seitdem jenen Blättern nachgeforscht, und ich kann daher um so weniger weder die Wahrheit der Tatsachen verbürgen, als, wenn jemand sie bestreiten wollte, dafür aufstehen; nur so viel kann ich versichern, daß ich sie seit jener Zeit, obgleich sie durch keinen äußeren Anlaß in mir aufs neue belebt wurden, niemals aus dem Gedächtnis verloren habe."
+      ],
+      [
+        "Es war im dritten Jahrzehnt unseres Jahrhunderts, an einem Oktobernachmittag – so begann der damalige Erzähler –, als ich bei starkem Unwetter auf einem nordfriesischen Deich entlangritt. Zur Linken hatte ich jetzt schon seit über einer Stunde die öde, bereits von allem Vieh geleerte Marsch, zur Rechten, und zwar in unbehaglichster Nähe, das Wattenmeer der Nordsee; zwar sollte man vom Deiche aus auf Halligen und Inseln sehen können; aber ich sah nichts als die gelbgrauen Wellen, die unaufhörlich wie mit Wutgebrüll an den Deich hinaufschlugen und mitunter mich und das Pferd mit schmutzigem Schaum bespritzten; dahinter wüste Dämmerung, die Himmel und Erde nicht unterscheiden ließ; denn auch der halbe Mond, der jetzt am Himmel stand, war meist von ziehendemWolkendunkel überdeckt.",
+        "Es war eiskalt; meine verklammten Hände konnten kaum den Zügel halten, und ich verdachte es nicht den Krähen und Möwen, die sich fortwährend krächzend und gackernd vom Sturm ins Land hineintreiben ließen. Die Nachtdämmerung hatte begonnen, und sudah konnte ich nicht mehr mit Sicherheit die Hufe meines Pferdes erkennen; keine Menschenseele war mir begegnet, ich hörte nichts als das Geschrei der Vögel, wenn sie mich oder meine treue Stute fast mit den langen Flügeln streiften, und das Tosen von Wind und Wasser."
+      ],
+      [
+        "Ich leugne nicht, ich wünschte mich mitunter in sicheres Quartier. Das Wetter dauerte jetzt in den dritten Tag, und ich hatte mich schon über Gebühr von einem mir besonders lieben Verwandten auf seinem Hofe in einer nördlicheren Harden zurückhalten lassen. Freilich, die Geschäfte waren heute nicht mehr mein Beweggrund; ich hatte mir dort eine ganze Tasche voll alter Urkunden und Handschriften zusammengesucht, deren Durchsicht mir in der Herbststille eine gar behagliche Beschäftigung schien.",
+        "Aber jetzt war ich auf dem Heimwege nach der Stadt, und der alte Braune unter mir trottete geduldig gegen den Sturm an. Da, als eben ein dicker Wolkenwulst über den Mond hinzog, sah ich aus der Finsternis vor mir eine dunkle, hochgewachsene Gestalt auf einem hochbeinigen, hageren Schimmel mir entgegenkommen; ein dunkler Mantel flatterte ihr um die Schultern, und im Vorbeifliegen sahen mich zwei brennende Augen aus einem bleichen Antlitz an."
+      ],
+      [
+        "Wer war das? Was wollte der? – Und jetzt fiel mir bei, ich hatte keinen Hufschlag gehört, keinen Keuchlaut des Pferdes; und Roß und Reiter waren doch hart an mir vorbeigefahren! In Gedanken darüber beschleunigte ich meinen Ritt; aber ich hatte sie nicht lange, so huschte es von rückwärts wieder an mir vorbei; mir war, als streifte mich der fliegende Mantel, und die Erscheinung war, wie das erste Mal, lautlos nach Norden zu verschwunden, von woher sie vorhin mir entgegengekommen war.",
+        "Mein Pferd, das sonst nicht leicht vor etwas scheute, machte einen Satz zur Seite und spitzte die Ohren; ich selbst aber legte ihm die Sporen ein, und bald glänzte mir aus der Tiefe des Kooges das Licht des Wirtshauses entgegen, das am Fuße des Deiches lag. Als ich abgestiegen war und in die warme Pesel trat, saßen dort der Deichgraf und mehrere Gevollmächtigte um den langen Tisch beim dampfenden Grog."
+      ]
+    ]
+  },
+  "effi": {
+    "pages": [
+      [
+        "In Front des schon seit Kurfürst Georg Wilhelm von der Familie von Briest bewohnten Herrenhauses zu Hohen-Cremmen fiel heller Sonnenschein auf die mittagsstille Dorfstraße, während nach der Park- und Gartenseite hin ein rechtwinklig angebauter Seitenflügel einen breiten Schatten erst auf einen weiß und grün quadrierten Fliesengang und dann über diesen hinaus auf ein großes, in seiner Mitte mit einer Sonnenuhr und an seinem Rande mit Canna indica und Rhabarberstauden besetztes Rondell warf.",
+        "Einige zwanzig Schritte weiter, in Richtung und Lage genau dem Seitenflügel entsprechend, lief eine ganz in kleinblättrigem Efeu stehende, nur an einer Stelle von einer kleinen weißgestrichenen Eisentür unterbrochene Kirchhofsmauer, hinter der der Hohen-Cremmener Schindelturm mit seinem blitzenden, weil neuerdings erst wieder vergoldeten Wetterhahn aufragte. Fronthaus, Seitenflügel und Kirchhofsmauer bildeten ein einen kleinen Ziergarten umschließendes Hufeisen, an dessen offener Seite man eines Teiches mit einem kleinen Steg und angekettetem Boot und dicht daneben einer Schaukel gewahr wurde, deren horizontal liegendes Brett zu Häupten und Füßen an je zwei Stricken hing, die nach oben hin in einen schon etwas schief stehenden Balkenطبق zusammenliefen."
+      ],
+      [
+        "Zwischen dem Teich und dem Rondell aber, und die Schaukel halb versteckend, standen ein paar mächtige alte Platanen. Auch die Front des Herrenhauses – eine mit vier, fünf Stufen einschließende Rampe, darauf eine Reihe grüner Kübel mit großen Agaven stand – gewährte bei dem schönen Wetter einen überaus freundlichen Anblick; angenehmer aber und jedenfalls anheimelnder war der Aufenthalt auf dem im Schatten gelegenen Fliesengange, woselbst Frau von Briest und ihre Tochter Effi schon seit einer halben Stunde mit einer Stickerei beschäftigt saßen, einem Altarteppich, dessen Vollendung sie sich zu Ehren des bevorstehenden Erntedankfestes zum Ziel gesetzt hatten.",
+        "Frau von Briest, eine noch schöne Frau von Anfang vierzig, wohlkonserviert und von einer fast mädchenhaften Rüstigkeit, trug ein schwarzes Seidenkleid und ein weißes Spitzentuch, während Effi in einem blau und weiß gestreiften, halb kittelartigen Leinwandkleide steckte, dem erst ein fest zusammengezogener bronzebrauner Ledergürtel die Taille gab; der Hals war frei, und über Schulter und Nacken fiel ein breiter Matrosenkragen. In allem, was sie tat, paarte sich Übermut und Grazie, während ihre lachenden braunen Augen eine große, natürliche Klugheit und viel Lebenslust und Herzensgüte verrieten."
+      ],
+      [
+        "Man nannte sie die „Kleine“, was sie sich gefallen lassen mußte, weil die schöne schlanke Mama noch um Handbreite höher war als sie. Eeben aber hatte sich Effi wieder erhoben, um nach links und rechts hin allerlei turnerische Drehungen zu machen, wobei sie die Arme hob und die Hände über dem Kopf zusammenlegte. „Effi, eigentlich hättest du doch wohl Kunstreiterin werden müssen“, sagte Frau von Briest, indem sie von ihrer Arbeit aufsah. „Immer am Trapez, immer an der Schnur. Ich glaube beinah, du möchtest auch, daß ich dir so was wie ein kurzes Kleidchen machte.“",
+        "„Warum nicht, Mama? Wenn es nur hübsch ist. Und dann, wer käme denn hierher? Niemand als Vetter Dagobert und Pastor Niemeyer; der eine ist mein Onkel, oder so gut wie mein Onkel, und der andere hat mich eingesegnet. Vor wem soll ich mich denn genieren?“ „Vor mir, Effi. Du bist doch nun siebzehn.“ „Ach, siebzehn ist noch gar nichts, Mama. Da bin ich ja noch ein halbes Kind. Und du sagst es ja selbst immer.“"
+      ],
+      [
+        "In diesem Augenblick traten drei junge Mädchen durch das kleine eiserne Gittertor des Kirchhofs und schritten auf einem schmalen Kieswege zwischen den Efeuranken und dem Rondell auf die Veranda zu. Es waren Hulda Niemeyer, des Pastors einziges Kind, und die Zwillingsschwestern Bertha und Hertha Jahnke, Töchter des Kantors, alle drei mit Effi befreundet und fast täglich im Herrenhause zu Gast.",
+        "Effi flog ihnen entgegen, küßte jede auf die Wange und rief: „Ihr kommt gerade zur rechten Zeit; Mama wollte mir eben wieder eine Predigt halten, weil ich ein bißchen geturnt habe. Aber nun laßt wir die Stickerei liegen; das Wetter ist viel zu schön, um stillzusitzen, und an der Schaukel im Platanenschatten weht ein herrlicher Wind vom Teiche herüber.“"
+      ]
+    ]
+  },
+  "venedig": {
+    "pages": [
+      [
+        "Gustav Aschenbach oder von Aschenbach, wie seit seinem fünfzigsten Geburtstag amtlich sein Name lautete, hatte an einem Frühlingsnachmittag des Jahres 19.., der unserem Kontinent monatelang eine so gefahrdrohende Miene zeigte, von seiner Wohnung in der Prinzregentenstraße zu München aus allein einen weiteren Spaziergang unternommen.",
+        "Überreizt von der schwierigen und gefährlichen, eben jetzt eine höchste Behutsamkeit, Umsicht, Eindringlichkeit und Genauigkeit des Willens erfordernden Arbeit der Vormittagsstunden, hatte der Schriftsteller dem Fortschwingen des produzierenden Triebwerkes in seinem Innern, jenem „motus animi continuus“, worin nach Cicero das Wesen der Beredsamkeit besteht, auch nach der Mittagsmahlzeit nicht Einhalt zu tun vermocht und den entlastenden Schlummer nicht gefunden, der ihm, bei zunehmender Abnutzbarkeit seiner Kräfte, einmal untertags so nötig war."
+      ],
+      [
+        "So hatte er bald nach dem Tee das Freie gesucht, in der Hoffnung, daß Luft und Bewegung ihn wiederherstellen und ihm zu einem fruchtbaren Abend verhelfen würden. Es war Anfang Mai und, nach kalten und nassen Wochen, ein falscher Hochsommer eingefallen. Der Englische Garten, obgleich nur erst zart belaubt, war dumpfig wie im August und in der Nähe der Stadt voller Wagen und Spaziergänger gewesen.",
+        "Bei der Aumeisterei, wohin stille und immer stillere Wege ihn geführt, hatte Aschenbach eine Weile das volkstümlich belebte Wirtsgärtchen überblickt, an dessen Rande einige Droschken und Equipagen hielten, hatte von dort bei sinkender Sonne seinen Heimweg außerhalb des Parks über die offene Flur genommen und erwartete, da er sich müde fühlte und über Föhring Gewitter drohte, am Nördlichen Friedhof die Tram, die ihn in gerader Linie zur Stadt zurückbringen sollte."
+      ],
+      [
+        "Zufällig fand er den Halteplatz und seine Umgebung von Menschen leer. Weder auf der gepflasterten Ungererstraße, deren Schienengeleise einsam gleißend gegen Schwabing liefen, noch auf der Föhringer Chaussee war ein Fuhrwerk zu sehen; hinter den Zäunen der Steinmetzleyen, wo zu Kauf stehende Kreuze, Gedächtnistafeln und Monumente ein zweites, unbehaustes Gräberfeld bilden, regte sich nichts, und das byzantinische Bauwerk der Aussegnungshalle lag schweigend im Abglanz des scheidenden Tages.",
+        "Ihre Stirnseite, mit griechischen Kreuzen und hieratischen Schildereien in lichten Farben geschmückt, weist überdies symmetrisch angeordnete Inschriften in Goldlettern auf, ausgewählte, das jenseitige Leben betreffende Schriftworte, wie etwa: „Sie gehen ein in die Wohnung Gottes“ oder: „Das ewige Licht leuchte ihnen“; und der Wartende hatte während einiger Minuten eine ernste Zerstreuung darin gefunden, die Formeln abzulesen und sein geistiges Auge in ihrer durchscheinenden Mystik sich verlieren zu lassen, als er, aus seinen Träumereien zurückkehrend, im Portikus, oberhalb der beiden apokalyptischen Tiere, welche die Freitreppe bewachen, einen Mann bemerkte, dessen nicht ganz gewöhnliche Erscheinung seinen Gedanken eine völlig andere Richtung gab."
+      ],
+      [
+        "Ob er nun aus dem Innern der Halle durch das bronzene Tor hervorgetreten oder von außen unversehens heran- und hinaufgelangt war, blieb ungewiß. Aschenbach, ohne sich sonderlich in die Frage zu vertiefen, neigte zur ersteren Annahme. Mäßig hochgewachsen, mager, bartlos und auffallend stumpfnäsig, gehörte der Mann zum rothaarigen Typ und besaß dessen milchige und sommersprossige Haut. Offenbar war er durchaus nicht bajuwarischen Schlages: wie denn wenigstens der breit und gerade gerandete Basthut, der ihm den Kopf bedeckte, seinem Aussehen ein Gepräge des Fremdländischen und Weitherkommenden verlieh.",
+        "Freilich trug er dazu die landesübliche Rucksack-Bürde um die Schultern geschnallt, einen gelblichen Gurtanzug aus Lodenstoff, wie es schien, einen grauen Wetterkragen über dem linken Unterarm, den er in die Weiche gestützt hielt, und in der Rechten einen mit eiserner Spitze versehenen Stock, welchen er schräg gegen den Boden stemmte und auf dessen Krücke er, bei gekreuzten Füßen, die Hüfte lehnte. Erhobenen Hauptes, so daß an seinem hager dem losen Sporthemd entwachsenden Halse der Adamsapfel stark und nackt hervortrat, blickte er mit zwei farblosen, rotbewimperten Augen scharf in die Weite."
+      ]
+    ]
+  },
+  "verwandlung": {
+    "pages": [
+      [
+        "Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, fand er sich in seinem Bett zu einem ungeheueren Ungeziefer verwandelt. Er lag auf seinem panzerartig harten Rücken und sah, wenn er den Kopf ein wenig hob, seinen gewölbten, braunen, von bogenförmigen Versteifungen geteilten Bauch, auf dessen Höhe sich die Bettdecke, zum gänzlichen Niedergleiten bereit, kaum noch erhalten konnte. Seine vielen, im Vergleich zu seinem sonstigen Umfang kläglich dünnen Beine flimmerten ihm hilflos vor den Augen.",
+        "„Was ist mit mir geschehen?“ dachte er. Es war kein Traum. Sein Zimmer, ein richtiges, nur etwas zu kleines Menschenzimmer, lag ruhig zwischen den vier wohlbekannten Wänden. Über dem Tisch, auf dem eine auseinandergepackte Musterkollektion von Tuchwaren ausgebreitet war – Samsa war Reisender –, hing das Bild, das er vor kurzem aus einer illustrierten Zeitschrift ausgeschnitten und in einem hübschen, vergoldeten Rahmen untergebracht hatte. Es stellte eine Dame dar, die, mit einem Pelzhut und einer Pelzboa versehen, aufrecht dasaß und einen schweren Pelzmuff, in dem ihr ganzer Unterarm verschwand, dem Beschauer entgegenhob."
+      ],
+      [
+        "Gregors Blick richtete sich dann zum Fenster, und das trübe Wetter – man hörte Regentropfen auf das Fensterblech aufschlagen – machte ihn ganz melancholisch. „Wie wäre es, wenn ich noch ein wenig weiterschliefe und alle Narrheiten vergäße“, dachte er, aber das war gänzlich undurchführbar, denn er war gewöhnt, auf der rechten Seite zu schlafen, konnte sich aber in seinem gegenwärtigen Zustand nicht in diese Lage bringen. Mit welcher Kraft er sich auch auf die rechte Seite warf, immer wieder schaukelte er in die Rückenlage zurück.",
+        "Er versuchte es wohl hundertmal, schloß die Augen, um die zappelnden Beine nicht sehen zu müssen, und ließ erst ab, als er in der Seite einen noch nie gefühlten, leichten, dumpfen Schmerz zu spüren begann. „Ach Gott“, dachte er, „was für einen anstrengenden Beruf habe ich gewählt! Tag aus, Tag ein auf der Reise. Die geschäftlichen Aufregungen sind viel größer, als im eigentlichen Geschäft zu Hause, und außerdem ist mir noch diese Plage des Reisens auferlegt, die Sorgen um die Zuganschlüsse, das unregelmäßige, schlechte Essen, ein immer wechselnder, nie andauernder, nie herzlich werdender menschlicher Verkehr. Der Teufel soll das alles holen!“"
+      ],
+      [
+        "Er fühlte ein leichtes Jucken oben auf dem Bauch; schob sich auf dem Rücken langsam näher zum Bettpfosten, um den Kopf besser heben zu können; fand die juckende Stelle, die mit lauter kleinen weißen Pünktchen besetzt war, die er nicht zu beurteilen verstand; und wollte mit einem Bein die Stelle betasten, zog es aber gleich zurück, denn bei der Berührung umwehten ihn Kälteschauer.",
+        "Er glitt wieder in seine frühere Lage zurück. „Dies zeitige Aufstehen“, dachte er, „macht einen ganz blödsinnig. Der Mensch muß seinen Schlaf haben. Andere Reisende leben wie Haremsfrauen. Wenn ich zum Beispiel im Laufe des Vormittags ins Gasthaus zurückgehe, um die erlangten Aufträge zu überschreiben, sitzen diese Herren erst beim Frühstück. Das sollte ich bei meinem Chef versuchen; ich würde auf der Stelle hinausfliegen. Wer weiß übrigens, ob das nicht sehr gut für mich wäre.“"
+      ],
+      [
+        "„Wenn ich mich nicht wegen meiner Eltern zurückhielte, ich hätte längst gekündigt, ich wäre vor den Chef hingetreten und hätte ihm meine Meinung von Grund des Herzens aus gesagt. Vom Pult hätte er fallen müssen! Es ist auch eine sonderbare Art, sich auf das Pult zu setzen und von der Höhe herab mit dem Angestellten zu reden, der überdies wegen der Schwerhörigkeit des Chefs ganz nahe herantreten muß. Nun, die Hoffnung ist noch nicht gänzlich aufgegeben; habe ich einmal das Geld beisammen, um die Schuld der Eltern an ihn abzuzahlen – es dürfte noch fünf bis sechs Jahre dauern –, mache ich die Sache unbedingt. Dann wird der große Schnitt gemacht.“",
+        "Vorläufig allerdings mußte er aufstehen, denn sein Zug fuhr um fünf Uhr. Und er sah zur Weckuhr hinüber, die auf dem Kasten tickte. „Himmlischer Vater!“ dachte er. Es war halb sieben Uhr, und die Zeiger gingen ruhig vorwärts, es war sogar halb vorüber, es näherte sich schon drei Viertel. Sollte der Wecker nicht geläutet haben? Man sah vom Bett aus, daß er auf vier Uhr richtig eingestellt war; gewiß hatte er auch geläutet. Ja, aber war es möglich, dieses möbelerschütternde Läuten ruhig zu verschlafen?"
+      ]
+    ]
+  },
+  "schach": {
+    "pages": [
+      [
+        "Auf dem großen Passagierdampfer, der um Mitternacht von New York nach Buenos Aires abgehen sollte, herrschte die übliche Geschäftigkeit und Bewegung der letzten Stunde. Gäste vom Land drängten durcheinander, um ihren Freunden das Geleit zu geben, Telegraphenboys mit schiefen Mützen schossen Namen ausrufend durch die Gesellschaftsräume, Koffer und Blumen wurden geschleppt, Kinder liefen treppauf und treppab, während das Orchester unerschütterlich zur Deckshow spielte.",
+        "Ich stand, im Gespräch mit einem Bekannten, etwas abseits von diesem Getümmel auf dem Promenadendeck, als neben uns zweimal oder dreimal scharf Blitzlicht aufzuckte; anscheinend war irgendein Prominenter knapp vor der Abfahrt noch von Reportern rasch interviewt und photographiert worden. Mein Freund blickte hin und lächelte. „Sie haben da einen raren Vogel an Bord, den Czentovic.“ Und da ich offenbar ein ziemlich verständnisloses Gesicht zu dieser Mitteilung machte, fügte er erklärend bei: „Mirko Czentovic, der Weltschachmeister. Er hat ganz Amerika von Ost nach West mit Turnierspielen abgeklappert und fährt jetzt zu neuen Triumphen nach Argentinien.“"
+      ],
+      [
+        "In der Tat erinnerte ich mich nun an diesen jungen Weltmeister und sogar an einiges Detail im Zusammenhang mit seiner raketenhaften Karriere; mein Freund, ein aufmerksamerer Zeitungsleser als ich, wußte sie durch eine ganze Reihe von Anekdoten zu ergänzen. Czentovic hatte sich vor etwa einem Jahr mit einem Schlage neben die altbewährten Matadore der Schachkunst wie Aljechin, Capablanca, Tartakower, Lasker, Bogoljubow gestellt.",
+        "Seit dem Auftreten des siebenjährigen Wunderkindes Rzeschewski bei dem Schachturnier 1922 in New York hatte noch nie der Einbruch eines völligen Unbekannten in die ruhmreiche Gilde soviel Aufsehen erregt. Denn Mirko Czentovic’ geistige Qualitäten schienen durchaus keine so blendende Laufbahn von vornherein zu weissagen. Bald sickerte das Geheimnis durch, daß dieser Champion in seinem privaten Leben unfähig war, in irgendeiner Sprache einen Satz ohne orthographische Fehler niederzuschreiben, und daß, wie einer seiner erbitterten Kollegen boshaft spöttelte, „seine Unbildung auf allen Gebieten ebenso universell sei wie sein Geiz“."
+      ],
+      [
+        "Er war der Sohn eines blutarmen südslawischen Donauschiffers, dessen kleine Barke eines Nachts von einem Getreidedampfer überrannt worden war, und nach dem Tode des Vaters hatte der Pfarrer des abgelegenen Ortes den damals zwölfjährigen, dumpfen, breitstirnigen, schweigsamen Knaben aus Barmherzigkeit zu sich genommen. Alles, was der gute Geistliche sich bemühte, dem maulfaulen, schläfrigen Jungen durch häuslichen Nachhilfeunterricht beizubringen, blieb vergeblich.",
+        "Mirko starrte die ihm schon hundertmal erklärten Buchstaben immer wieder wie neu an; auch für die einfachsten Unterrichtsgegenstände arbeitete sein schwerfällig funktionierendes Gehirn ohne die mindeste behaltende Kraft. Beim Rechnen mußte er mit vierzehn Jahren noch immer die Finger zu Hilfe nehmen, und ein Buch oder eine Zeitung zu lesen bedeutete für den schon Halbwüchsigen noch besondere Anstrengung. Dabei konnte man Mirko keineswegs unwillig oder widerspenstig nennen; er tat gehorsam, was man ihm gebot, holte Wasser, hackte Holz, arbeitete auf dem Felde mit, räumte die Küche auf und erledigte verläßlich, wenn auch mit einer ärgerlichen Langsamkeit, jeden geforderten Dienst."
+      ],
+      [
+        "Was aber den guten Pfarrer an dem querköpfigen Jungen am meisten verdroß, war seine völlige Teilnahmslosigkeit. Er tat nichts, ohne daß man ihn besonders aufforderte, stellte niemals eine Frage, spielte nicht mit anderen Knaben und suchte sich von selbst keinerlei Beschäftigung, sobald man ihn nicht ausdrücklich zu einer anhielt; hatte er sein Tagwerk im Haushalt abgetan, so saß er stur in der Stube herum mit jenem leeren Blick, den die Schafe auf der Weide haben, ohne an dem geringsten Vorgang rings um sich Anteil zu nehmen.",
+        "Abends aber, während der Pfarrer, die lange Bauernpfeife schmauchend, seine drei üblichen Schachpartien mit dem Wachtmeister der Gendarmerie spielte, hockte der schweigsame Bursche mit strähnigem Blondhaar stumm daneben und starrte unter den schweren Lidern scheinbar schläfrig und gleichgültig auf das karierte Brett, bis eines Winterabends ein unerwarteter Zwischenfall seine verborgene Gabe ans Licht riß."
+      ]
+    ]
+  },
+  "glasberg": {
+    "pages": [
+      [
+        "In dem schmalen Haus hinter der Gerberei, wo das Wasser des Mühlgrabens selbst im Hochsommer nach gebeizter Rinde und kaltem Eisen roch, wuchs Anselm unter dem Klopfen des Schustereisens auf. Sein Vater saß vom ersten Büchsenlicht bis in die späte Dämmerung auf dem niedrigen Dreibeinschemel, einen Riemen über dem Knie, drei eiserne Stifte zwischen den schmalen Lippen, und schlug den Takt einer Geduld, die keine Fragen duldete. Wer Schuhe besohlte, sagte der Alte selten, aber dann mit einer Stimme wie trockenes Holz, der wisse von den Menschen genug: er sehe an den abgelaufenen Absätzen, wer vor sich selber fliehe und wer bloß im Kreise gehe.",
+        "Anselm aber blickte, sooft er das Pech im kleinen Tontopf über der Kohlenpfanne rührte, durch das blinde, von Fliegenpunkten getrübte Scheibenglas hinauf nach Norden, wo über den dunklen Tannenrücken bei klarem Frost eine helle, schneidende Kante im Himmelsblau stand. Die Fuhrleute nannten jene Erhebung den Glasberg, obwohl kein Mensch im Kirchspiel je seinen Fuß auf den oberen Grat gesetzt hatte. Im Frühling schien er aus blassem Rauch gefügt, im Herbst aus geschliffenem Quarz, der das letzte Abendlicht noch hielt, wenn unten in den Gassen längst die Kienspäne brannten."
+      ],
+      [
+        "In seinem neunzehnten Jahr kam ein fahrender Uhrenflicker und Steinschleifer durch das Tal, ein hagerer Mann mit grauen Schläfen und einem Wachstuchranzen, in dem geschliffene Linsen in wollenen Tüchern lagen. Er ließ sich ein Paar abgetretene Schnallenschuhe flicken, saß zwei Stunden auf der Bank vor der Werkstatt und hielt Anselm ein dreikantiges Prisma vor die Augen. Als der Junge hindurchsah, zerfiel die graue Mauer des gegenüberliegenden Kornspeichers in sieben glühende Säume, als brenne im Kalkstein ein verborgenes Feuer.",
+        "„Du siehst nur das Getrennte“, sagte der Fremde und schloß das Glas wieder in sein Tuch. „Unten im Tal ist alles gemischt und schwer wie Lehm. Erst wo der Stein durchsichtig wird, erkennt einer, was sein eigener Schatten wiegt. Aber wer hinaufsteigt, darf an den Zollstätten der Täler nichts behalten, woran seine Finger hängen.“ Am nächsten Morgen war der Fremde fort, doch auf dem Fenstersims lag ein schmaler Splitter klaren Bergkristalls, scharf genug, um die Haut an der Daumenkuppe zu ritzen."
+      ],
+      [
+        "Drei Wochen darauf, als die ersten Nebel aus den Wiesen stiegen und die wilden Gänse hoch über dem Kirchturm nach Süden zogen, schnürte Anselm sein Bündel. Er nahm ein Laib Roggenbrot, das kleine Schustermesser mit dem Heft aus Hirschhorn und das flache Notizbuch seiner verstorbenen Mutter, in das sie einst Kräuternamen und Gebete mit blasser Gallustinte eingetragen hatte. Er trat nicht durch die Haustür, deren Glocke geschellt hätte, sondern stieg über die niedrige Gartenmauer in den nassen Klee hinaus.",
+        "Im ersten Tal, das man die Weidenmulde nannte, stand das Wasser knöcheltief zwischen den grauen Stämmen. Eine alte Fährfrau saß an einer steinernen Furt vor einem kleinen Feuer aus nassem Reisig. Als Anselm über die Steine setzen wollte, hob sie nicht den Kopf, sondern streckte nur die offene Hand aus. „Silber habe ich keines“, sagte Anselm. „Silber rostet im Moor“, gab die Alte zurück, „gib mir das Messer, mit dem du dein Brot schneidest und deine Sohlen richtest; wer oben schneiden will, zerbricht den Berg.“"
+      ],
+      [
+        "Anselm zögerte, wog das warme Hornheft in der Hand und legte es endlich auf den flachen Uferstein. Sobald er das andere Ufer erreichte, fühlte er eine seltsame Leichtigkeit in den Schultern, als wäre mit dem Stahl auch der Zwang von ihm abgefallen, jedes Ding auf seinen Nutzen hin zu prüfen. Der Pfad stieg nun steiler durch einen Buchenwald, dessen gelbes Laub ohne Wind von den Zweigen sank, Blatt um Blatt, in einer großen, feierlichen Stille.",
+        "Gegen Mittag trat er auf eine Hochfläche hinaus, und vor ihm erhob sich die erste Stufe des Glasberges: keine Wand aus Eis, sondern gewaltige, sechskantige Stufen aus bläulichem Gestein, in denen sein eigenes Spiegelbild ihm hundertfach, gebrochen und fremd, entgegentrat. Unter der großen, weißen Herbstsonne begriff er, daß der Weg nach oben kein Ergreifen sein würde, sondern ein langsames Durchsichtigwerden."
+      ]
+    ]
+  },
+  "weissfluss": {
+    "pages": [
+      [
+        "Den Namen des Flusses hatten sie schon im November aus den Meldekarten gestrichen; in den Funksprüchen hieß er nur noch Abschnitt Vier, und für uns, die wir im Kellergewölbe des gesprengten Zollhauses lagen, war er der Weiße Fluss, weil das Eis auf ihm nicht spiegelte, sondern unter einer verwehten Kruste aus gefrorenem Kalkstaub und altem Schnee wie ein breites Leinentuch zwischen den Uferböschungen lag.",
+        "Von der steinernen Brücke standen noch zwei Pfeiler und der mittlere Bogen, über den die Pioniere im Oktober Bohlen aus rohem Kiefernholz gelegt hatten. Jedesmal, wenn der Ostwind durch die eisernen Geländerstäbe strich, gab das Holzwerk ein trockenes Knarren von sich, wie ein Dachstuhl, der unter einer zu schweren Schneelast nachgibt. Wir waren zu dritt: Buchholz, der vor dem Krieg in einer Druckerei in Magdeburg Bleilettern gesetzt hatte, der neunzehnjährige Kersten mit den erfrorenen Ohrläppchen, und ich."
+      ],
+      [
+        "Zwischen vier Uhr nachmittags und sechs Uhr morgens fiel kein Schuß. Die Geschütze drüben hinter dem Birkenwald schwiegen, seit der Frost den Boden so hart gemacht hatte, daß keine Schaufel mehr tiefer als zwei Fingerbreit in die Erde drang. Man gewöhnt sich an das Heulen der Granaten, man lernt am Pfeifton unterscheiden, ob ein Einschlag fünfzig Schritt vor der Böschung liegt oder hinten in den verlassenen Gärten; man zieht den Kopf zwischen die Schultern, zählt die Sekunden und greift wieder nach dem Kochgeschirr.",
+        "Aber gegen diese Stille am Weißen Fluss gab es keine Deckung. Sie kroch durch die mit Sandsäcken verstopften Kellerluken, setzte sich als grauer Reif an die Mäntel und machte jedes Wort, das einer sprach, unanständig laut. Wenn Buchholz seine Taschenuhr aufzog – sieben kurze, metallische Rasten –, sahen Kersten und ich gleichzeitig zur Decke hinauf, als könnte das Geräusch drüben am anderen Ufer gehört werden und das Schweigen zum Einsturz bringen."
+      ],
+      [
+        "„Hörst du das?“ flüsterte Kersten in der vierten Nacht. Er kauerte hinter der Schießscharte, das Gewehr auf den gefrorenen Lehmsack gelegt, den Stahlhelm tief in der Stirn. Ich trat neben ihn und spähte durch den schmalen Schlitz. Über dem Fluß hing ein milchiger Dunst, obwohl kein Mond am Himmel stand. Am ersten Brückenpfeiler schob sich eine Eisscholle mit leisem Schaben an den Quadern empor und brach mit einem hellen, gläsernen Ton entzwei.",
+        "„Das ist nur das Wasser unter dem Eis“, sagte ich. „Der Fluß fällt.“ Kersten schüttelte den Kopf, ohne das Auge vom Visier zu nehmen. „Nicht das Wasser. Es ist, als ob da draußen hundert Mann im Schnee stünden und den Atem anhielten. Wenn wenigstens einer schießen wollte, damit man weiß, daß die Uhr noch geht.“"
+      ],
+      [
+        "Buchholz saß am kleinen Kanonenofen, in dem wir abwechselnd nasse Zaunlatten und die Aktenbündel des alten Zollamts verbrannten – Frachtbriefe für Holz, Gerste und Flachs aus einem Sommer, der uns weiter entfernt schien als unsere eigene Kindheit. Die bläuliche Flamme warf seinen Schatten riesig an die geschwärzte Ziegelwand. Er hielt ein halb verbranntes Blatt in der Hand, las eine Zeile vor sich hin und legte es langsam in die Glut.",
+        "„Zweiundzwanzig Sack Hafer, verzollt am vierzehnten August“, murmelte er. „Damals hat hier einer mit Tinte unterschrieben, hat seinen Stempel aufgedrückt und ist mittags zum Essen über die Brücke gegangen. Ohne sich umzudrehen.“ Er schwieg wieder, und draußen auf den Kieferbohlen der Brücke setzte der Wind von neuem an, strich über die drei leeren Helme auf der Brustwehr und trug den feinen, weißen Staub vom einen Ufer zum anderen."
+      ]
+    ]
+  },
+  "zeugen": {
+    "pages": [
+      [
+        "Um sieben Uhr zweiundzwanzig, als Fräulein Korten den Messingschlüssel zweimal im Schloß ihrer Korridortür umdrehte, stand die Tür der gegenüberliegenden Wohnung einen Spaltbreit offen, gerade so weit, wie die vorgelegte Sicherheitskette aus vernickeltem Stahl es zuließ. Im dunklen Spalt war nichts zu erkennen als der blasse Schimmer einer Brillenglasfassung und der graue Saum einer Strickjacke, doch kaum hatte Fräulein Korten den ersten Schritt auf den Bohnerwachsboden des Treppenabsatzes gesetzt, glitt das Holz lautlos ins Schloß, ohne daß die Falle schnappte; man mußte die Klinke von innen behutsam heruntergedrückt und erst nach dem Anziehen wieder losgelassen haben.",
+        "Es war ein Dienstag im Oktober, weder kalt noch warm, einer jener Tage in der Kreisstadt, an denen der Rauch der Zuckerfabrik senkrecht bis in die niedrige Wolkendecke steigt und dort wie ein graues Tischtuch über den Schieferdächern liegenbleibt. Unten im Hausflur roch es nach Kohlsuppe, feuchtem Kokosläufer und der Druckerschwärze der Morgenzeitungen, die der Austräger halb in die schmalen Messingschlitze der Holzkästen geschoben hatte."
+      ],
+      [
+        "Als Irene Korten auf die Straße trat, kehrte der Hausmeister der Sparkasse gegenüber gerade das welke Platanenlaub in die Gosse. Er stützte beide Hände auf den Stiel seines Reisigbesens, wandte den Kopf um eine halbe Drehung und sah ihr nach, bis sie an der Auslage des Milchgeschäfts vorüber war. Durch die beschlagene Scheibe des Ladens blickte Frau Meissner über eine Pyramide aus blauen Kondensmilchdosen hinweg genau auf Irenes Regenmantel, senkte jedoch im selben Augenblick die Lider und begann mit einem feuchten Leinentuch über die bereits blanke Marmorplatte des Ladentisches zu wischen.",
+        "Im Schreibbüro der Städtischen Güterverwaltung im zweiten Stock des alten Rathauses standen sechs Schreibtische aus hellem Eschenholz in zwei genauen Reihen hintereinander. Auf jedem Tisch lag eine grüne Filzunterlage, darauf eine schwarze Schreibmaschine vom Typ Olympia Robust und rechts daneben ein Stapel gelblicher Durchschlagpapiere. Irene hängte ihren Mantel an den vierten Haken der Garderobenleiste, setzte sich auf ihren Drehstuhl und zog die Staubhaube aus grauem Wachstuch von den Typenhebeln."
+      ],
+      [
+        "Am Nachbartisch spitzte HerrWitte mit einem kleinen Taschenmesser seinen Kopierstift über einem gefalteten Blatt Konzeptpapier. Er sagte „Guten Morgen, Fräulein Korten“, ohne die Augen vom Graphitstaub zu heben, doch als sie das erste Aktenbündel aus dem Drahtkorb nahm – es betraf die Räumung des alten Schuppengeleises hinter dem Güterbahnhof am vergangenen Donnerstagabend –, hielt seine Klinge inne.",
+        "Im Hof gegenüber, jenseits der schmalen Gasse, zählte Irene vierzehn identische Fenster der Kreissparkassen-Buchhaltung. Hinter dreizehn Scheiben hingen die grauen Lamellenjalousien halb herabgelassen; nur hinter dem vierten Fenster von links brannte eine einzelne Schreibtischlampe mit grünem Glasschirm, und daneben stand ein Mann im dunklen Anzug, die Hände auf dem Rücken verschränkt, den Blick unverwandt auf ihr Fenster gerichtet."
+      ],
+      [
+        "Um elf Uhr trat der Abteilungsleiter, Amtsrat Lohmann, aus seinem Zimmer, legte einen schmalen Streifen weißen Löschpapiers neben Irenes Maschine und sagte mit gedämpfter Stimme: „Das Protokoll vom Donnerstag wird nicht mehr abgeschrieben, Fräulein Korten. Die Sache hat sich erledigt; es war ohnedies niemand am Gleis.“",
+        "Er nahm den Hefter unter den Arm. Durch die geöffnete Tür seines Vorzimmers sah Irene im Wandspiegel, daß sowohl Herr Witte als auch die beiden jüngeren Angestellten in der hinteren Reihe reglos über ihre Tasten gebeugt saßen, die Finger in der Luft angehalten, bis die Tür des Amtsrats wieder ins Schloß gefallen war. Dann setzten alle drei gleichzeitig zum Tippen an, ein hartes, gleichmäßiges Prasseln wie Platzregen auf Blech, in dem kein einzelner Anschlag mehr zu unterscheiden war."
+      ]
+    ]
+  },
+  "geruch": {
+    "pages": [
+      [
+        "Wer eine Stadt nach ihren Mauern, Brücken und Kirchtürmen zeichnet, sagte Valerius oft, wenn er abends seine Tuschefedern in destilliertem Regenwasser auswusch, der zeichnet nur ihr Gerippe; ihr wahres Fleisch aber, ihre Geschichte und ihr heimliches Fieber liegen in der Luft, zwei Ellen über dem Kopfsteinpflaster, dort, wo der Atem der Kellerlöcher sich mit dem kalten Dunst des Flusses und dem warmen Talg der Lichtziehereien kreuzt.",
+        "Seit sieben Jahren bewohnte Valerius die oberste Mansarde über dem alten Kornhaus am Fischmarkt, weil dort oben der Nordwestwind die Dünste der Unterstadt rein hinwegfegte und ihm ein weißes, unbeschriebenes Blatt aus kühler Luft ließ. Auf seinem langen Zeichentisch aus Ahornholz lagen keine Meßketten und keine Winkelspiegel, sondern hundertzwanzig kleine Fläschchen aus dunklem Violettglas, gefüllt mit getrockneten Harzen, pulverisiertem Schiefer, altem Grabenwasser und dem Staub aus siebzig verschiedenen Gassen."
+      ],
+      [
+        "Auf seinen großen Pergamentblättern trug er die Stadt nicht mit schwarzen Linien für Mauern und Plätze ein, sondern mit feinen, geschwungenen Höhenlinien aus farbiger Tusche: Ocker für die Bäckergassen, in denen um drei Uhr morgens der saure Hefedampf durch die Ritzen der Backstuben quoll; Berliner Blau für die windigen Höfe der Färber am Mühlgraben, wo der scharfe Geist von Indigo und Urin in den Ziegeln saß; und ein blasses, fast wäßriges Karmin für die stillen Gärten hinter dem Domkapitel, in denen im Spätherbst die faulenden Quitten unter dem ersten Reif im Grase lagen.",
+        "Seine Nase, lang, schmalrückig und an den Flügeln von einer unablässigen, bebenden Wachsamkeit, vermochte im dichtesten Nebel auf dreißig Schritt zu bestimmen, ob er sich vor dem Tor des Siechenhauses befand oder an der Mauer des alten Salzspeichers. Er ging meist bei Nacht, den Kragen seines Tuchmantels hochgeschlagen, ein schmales Heft aus rauhem Büttenpapier in der behandschuhten Hand, und notierte mit einem Silberstift die Strömungen, die bei wechselndem Luftdruck aus den engen Durchgängen brachen."
+      ],
+      [
+        "Im Spätherbst des Jahres 1794 war seine große Karte bis auf ein einziges Geviert im östlichen Viertel hinter der alten Seilerei vollendet. Auf den amtlichen Plänen des Magistrats war dort nichts verzeichnet als eine schmale, blind endende Gasse namens Krummes Gäßchen, eingezwängt zwischen der Brandmauer des ehemaligen Klosters und den verlassenen Speichern der Tuchhändler.",
+        "Doch sooft Valerius sich der Mündung dieser Gasse näherte, geschah etwas, das seinen Silberstift stocken ließ. Aus dem schmalen Schlund zwischen den feuchten Sandsteinmauern wehte kein Moder, kein Kohlenrauch, kein Geruch nach nassem Hund oder altem Kraut, sondern ein vollkommenes, schneidendes Nichts – eine Luft, so leer und ausgewaschen, als hätte jemand dort jedes Stäubchen Erinnerung mit Kalk und kaltem Eisen getilgt."
+      ],
+      [
+        "Als er am dritten Abend im November den Fuß über die Rinne aus abgetretenem Basalt setzen wollte, um mit geschlossenen Augen in die Gasse einzutreten, trat aus dem Torbogen des Eckhauses ein alter Nachtwächter ohne Laterne und hielt ihm wortlos den Schaft seiner Hellebarde quer vor die Brust. Aus dem wollenen Schal des Mannes stieg der vertraute Dunst von billigem Knaster und feuchtem Schafspelz, doch hinter seinem Rücken begann jene gläserne, geruchlose Stille.",
+        "„Hier ist kein Durchgang für Euresgleichen, Meister“, sagte der Wächter leise. „Was hier lag, hat der Rat vor dreißig Jahren aus den Büchern geschabt. Geht heim und malt Euren Fleck mit weißer Kreide zu.“ Aber gerade hinter der Schulter des Alten nahm Valerius in diesem Augenblick, fein wie ein einzelner Faden im Wind, einen fremden Hauch wahr: bitteres Mandelöl, verbranntes Pergament und den süßen, metallischen Duft einer Rose, die im Dunkeln blüht."
+      ]
+    ]
+  },
+  "uhrmacher": {
+    "pages": [
+      [
+        "Im strengen Winter des Jahres 1789, als die Saale unter den Bögen der Camsdorfer Brücke bis auf den kiesigen Grund hinab zu grünlichem Glas gefror und den Studenten in den ungeheizten Hörsälen der Universität die Tinte in den bleiernen Fässern stockte, saßen in der Johannisgasse zu Jena zwei Männer einander gegenüber, zwischen denen auf einem mit schwarzem Samt ausgeschlagenen Werktisch das unvollendete Räderwerk einer astronomischen Pendeluhr lag.",
+        "Der ältere, Meister Gottfried Faber, trug noch die gepuderte Zopfperücke der Zunft; seine Daumenkuppen waren vom jahrzehntelangen Feilen des Messings flach und hornig geworden, und für ihn war die Zeit ein göttliches Lehen, das der Uhrmacher wie ein treuer Verwalter in gleiche, demütige Schläge zu teilen hatte. Ihm gegenüber beugte sich sein ehemaliger Geselle und nunmehriger Kompagnon Lukas Merz über das Lupenglas – ein schmaler, unruhiger Dreißiger, der in Paris bei den Mechanikern der Akademie gelernt hatte und behauptete, eine Uhr messe die Zeit nicht, sondern bringe sie durch die Strenge ihrer Hemmung überhaupt erst hervor."
+      ],
+      [
+        "Sie bauten seit vierzehn Monaten im Auftrag des Herzogs an der Großen Jenaischen Weltmaschine: einem Werk mit drei übereinanderliegenden Zifferblättern aus versilbertem Kupfer, das nicht allein die bürgerlichen Stunden und die wahre Sonnenzeit Jenas weisen sollte, sondern zugleich den Lauf der Jupitermonde, die Knoten der Mondbahn und den genauen Augenblick, in dem ein Stern dritter Größe hinter dem Grat des Jenzig hinabtrat.",
+        "Sechsundneunzig Zahnräder aus gehärtetem Glockenmetall griffen ineinander, jedes Zahnprofil nach den neuen logarithmischen Tafeln berechnet, die Merz nächtelang bei Talglicht mit dem Zirkel aufgerissen und die Faber tagsüber mit der Schweizer Schlichtfeile auf den hundertsten Teil einer Pariser Linie genau aus dem vollen Messing geschnitten hatte. Solange das Werk schwieg, waren sie ein einziger Geist mit vier Händen gewesen."
+      ],
+      [
+        "Der Streit brach in der Nacht des einundzwanzigsten Dezember aus, als sie das rostkompensierte Pendel aus neun wechselnden Stäben von Eisen und Zink zum ersten Mal in die Aufhängung hängten und den Anker in das Steigrad greifen ließen. Durch das gefrorene Werkstattfenster sah man auf dem Dachfirst des Nachbarhauses das kleine messingene Spiegelteleskop blitzen, mit dem sie den Meridiandurchgang des Sirius bestimmten, um den Gang des Werkes gegen das Himmelsgewölbe zu prüfen.",
+        "Als der erste Schlag der Graham-Hemmung durch die stille Stube klang – ein trockener, kristallklarer Laut, der weder vor- noch nachhallte –, zog Merz sein Taschenchronometer hervor, verglich die Sekunde und sagte mit einem schmalen Lächeln: „Sie geht um vier Zehntelsekunden im Sterntag strenger als der Himmel, Meister Faber. Der Himmel eilt im Winter; unsere Maschine aber irrt nicht. Von morgen an wird sich die Stadt nach unserem Anker richten müssen, nicht nach den Sternen.“"
+      ],
+      [
+        "Faber legte die Kornzange auf das Samttuch nieder. Seine Hand zitterte nicht, doch um seine Augen trat jene graue Schärfe, die der Geselle aus den Lehrjahren fürchtete. „Wer dem Himmel vorschreibt, wann er im Mittag zu stehen hat“, antwortete der Alte langsam, „der baut kein Uhrwerk, Lukas, sondern einen Götzen aus Messing. Die Minuten gehören keinem von uns beiden; wir sind nur die Knechte, die den Staub aus den Trieben blasen.“",
+        "„Der Staub“, erwiderte Merz und trat an das Fenster, wo sein Atem sofort zu feinen Eisblumen auf der Scheibe gerann, „ist alles, was Ihren alten Uhren geblieben ist, Meister. Wem die Teilung gehört, dem gehört auch die Stunde. Und auf der Platine unter dem großen Federhaus steht mein Name neben dem Ihren.“ Zwischen ihnen, auf dem schwarzen Tuch, schlug das Pendel weiter durch die kalte Nacht, ungerührt von beiden, und schnitt die Finsternis in lauter gleiche, unwiederbringliche Stücke."
+      ]
+    ]
+  }
+};
+// Redirect or mount standalone archive if opened directly
+if (window.location.pathname.endsWith('wendland-bibliothek.html')) {
+  window.location.replace('/');
+}
+</script>
+</body>
+</html>

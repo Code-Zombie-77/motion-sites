@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atelier — Smart Farming für die Ernte von morgen</title>
+<meta name="description" content="Atelier vernetzt Felder, Maschinen und Daten: Sensorik, Robotik und präzise Bewässerung für höhere Erträge.">
+<meta property="og:title" content="Atelier — Smart Farming für die Ernte von morgen">
+<meta property="og:description" content="Wir vernetzen Felder, Maschinen und Daten für präzise Bewässerung und höhere Erträge.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://images.unsplash.com" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com/3.4.1"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        'instrument-serif': ['"Instrument Serif"', 'serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+    },
+  },
+};
+</script>
+<style type="text/tailwindcss">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* overflow-x only on <html>: it propagates to the viewport. On <body> it would
+   turn body into a scroll container and break the sticky hero. */
+html { overflow-x: hidden; }
+body { width: 100%; }
+#root { width: 100%; min-height: 100%; }
+html { scroll-behavior: smooth; }
+body { background: #0a0a0a; -webkit-font-smoothing: antialiased; }
+html.menu-open, html.menu-open body { overflow: hidden; }
+section[id] { scroll-margin-top: 72px; }
+
+/* 500ms, cubic-bezier(0.76,0,0.24,1) — hamburger lines */
+.hb-line {
+  position: absolute;
+  height: 2px;
+  background: #fff;
+  border-radius: 9999px;
+  transition: transform 500ms cubic-bezier(0.76,0,0.24,1), opacity 500ms cubic-bezier(0.76,0,0.24,1), width 500ms cubic-bezier(0.76,0,0.24,1);
+}
+.hb-top    { width: 1.5rem; transform: translateY(-6px); }
+.hb-mid    { width: 1rem;   transform: translateY(0); }
+.hb-bottom { width: 1.5rem; transform: translateY(6px); }
+[data-open="true"] .hb-top    { transform: translateY(0) rotate(45deg); }
+[data-open="true"] .hb-mid    { opacity: 0; transform: scaleX(0); }
+[data-open="true"] .hb-bottom { transform: translateY(0) rotate(-45deg); }
+
+/* 700ms overlay transitions */
+.ease-menu { transition-timing-function: cubic-bezier(0.76,0,0.24,1); }
+#mobileMenu { visibility: hidden; }
+#mobileMenu[data-open="true"] { visibility: visible; }
+#mobileMenu.closing { visibility: visible; }
+
+/* fixed header */
+#siteHeader { transition: background-color .4s ease, backdrop-filter .4s ease; }
+#siteHeader.scrolled { background: rgba(8,8,8,.42); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+
+/* ---- hero scroll push-in ---- */
+#heroWrap { height: 200vh; }
+#heroScale { transform-origin: 50% 74%; will-change: transform; }
+#heroContent { will-change: transform, opacity; }
+
+/* ---- video FX layer (aligned to the 1920x1080 video via object-cover math) ---- */
+#fx { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1.2s ease; }
+#fx.on { opacity: 1; }
+#fxStage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; will-change: transform; }
+#fxStage canvas { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; }
+#skyCanvas { mix-blend-mode: screen; }
+#dash {
+  position: absolute; left: 896px; top: 771px; width: 161px; height: 80px;
+  border-radius: 4px; overflow: hidden; background: #0b1018;
+  box-shadow: 0 0 14px rgba(70,190,255,.28), 0 0 40px rgba(40,140,255,.12);
+  pointer-events: auto; cursor: pointer;
+}
+#dash canvas { position: absolute; left: 0; top: 0; width: 161px; height: 80px; display: block; }
+/* let clicks pass through the hero wrapper to the robot screen */
+.hero-layer { pointer-events: none; }
+.hero-layer h1, .hero-layer p, .hero-layer .cta-row { pointer-events: auto; }
+
+/* ---- sections ---- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+.reveal.in { opacity: 1; transform: none; }
+.reveal[data-r="l"] { transform: translateX(-70px); }
+.reveal[data-r="r"] { transform: translateX(70px); }
+.reveal[data-r="s"] { transform: scale(.86); transition-duration: 1.1s; }
+.reveal[data-r].in { transform: none; }
+
+/* scroll cue */
+.scroll-cue { pointer-events: none; }
+.cue-track { position: relative; width: 22px; height: 36px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 12px; }
+.cue-dot { position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; margin-left: -2px; border-radius: 2px; background: #fff; animation: cue 1.8s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes cue { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 70% { transform: translateY(14px); opacity: 0; } 100% { opacity: 0; } }
+
+/* floating leaves */
+#leaves { position: fixed; inset: 0; z-index: 30; pointer-events: none; overflow: hidden; opacity: 0; transition: opacity 1s ease; }
+#leaves.on { opacity: 1; }
+.leaf { position: absolute; width: var(--s); height: var(--s); will-change: transform; filter: drop-shadow(0 8px 14px rgba(0,0,0,.35)); }
+.leaf > svg { width: 100%; height: 100%; animation: sway var(--d) ease-in-out infinite alternate; transform-origin: 50% 90%; }
+@keyframes sway { from { transform: rotate(calc(var(--r) - 14deg)) translateY(-6px); } to { transform: rotate(calc(var(--r) + 14deg)) translateY(8px); } }
+@media (prefers-reduced-motion: reduce) { #leaves { display: none; } .reveal, .reveal[data-r] { transform: none; } }
+.card-img img { transition: transform 1.1s cubic-bezier(.22,1,.36,1); }
+.card-img:hover img { transform: scale(1.06); }
+.strip { scrollbar-width: none; }
+.strip::-webkit-scrollbar { display: none; }
+.hair { background: linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.04)); height: 1px; }
+</style>
+</head>
+<body class="font-sans text-white">
+<div id="root">
+
+<!-- Fixed navbar -->
+<header id="siteHeader" class="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 md:px-12 lg:px-16 py-5 md:py-6">
+  <div class="flex items-center gap-10">
+    <a href="#top" class="text-white font-semibold text-lg tracking-tight font-sans">Atelier</a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="#loesungen"    class="text-white/80 hover:text-white text-sm font-light transition-colors duration-200">Lösungen</a>
+      <a href="#technologie"  class="text-white/80 hover:text-white text-sm font-light transition-colors duration-200">Technologie</a>
+      <a href="#betrieb"      class="text-white/80 hover:text-white text-sm font-light transition-colors duration-200">Betrieb</a>
+      <a href="#magazin"      class="text-white/80 hover:text-white text-sm font-light transition-colors duration-200">Magazin</a>
+    </nav>
+  </div>
+  <div class="flex items-center gap-6">
+    <a href="#kontakt" class="hidden md:inline-block text-white/80 hover:text-white text-sm font-light transition-colors duration-200">Kontakt</a>
+    <a href="#kontakt" class="hidden md:inline-flex items-center bg-white text-black rounded-full px-5 py-2 text-sm font-medium hover:bg-white/90 transition-colors duration-200">Demo anfragen</a>
+    <button id="hamburger" type="button" data-open="false"
+      class="md:hidden relative w-6 h-6 flex items-center justify-center"
+      aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobileMenu">
+      <span class="hb-line hb-top"></span>
+      <span class="hb-line hb-mid"></span>
+      <span class="hb-line hb-bottom"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ================= HERO (sticky, pushes in on scroll) ================= -->
+<div id="heroWrap" class="relative">
+<section id="top" class="sticky top-0 w-full h-screen overflow-hidden bg-black">
+
+  <div id="heroScale" class="absolute inset-0">
+    <video id="bgVideo"
+      class="absolute inset-0 w-full h-full object-cover"
+      src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_204103_f607742e-09da-4cf5-bb06-4e67b0a531de.mp4"
+      autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+
+    <!-- FX overlays: animated sky, water sprays, robot dashboard -->
+    <div id="fx" aria-hidden="true">
+      <div id="fxStage">
+        <canvas id="skyCanvas"></canvas>
+        <canvas id="sprayCanvas"></canvas>
+        <div id="dash" title="Analytics anzeigen"><canvas id="dashCanvas"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="heroShade" class="absolute inset-0 z-[2] bg-[#0a0a0a] opacity-0 pointer-events-none"></div>
+
+  <!-- Hero content -->
+  <div id="heroContent" class="hero-layer relative z-10 flex flex-col h-full pt-[68px] md:pt-[80px]">
+    <div class="flex-1 flex flex-col items-center justify-start pt-4 sm:pt-6 md:pt-8 lg:pt-10 px-6 text-center">
+      <h1 class="font-instrument-serif text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.1] max-w-5xl">
+        SENSORIK <span class="italic font-instrument-serif">und</span> ROBOTIK<br>
+        FÜR <span class="italic font-instrument-serif">die</span> ERNTE<br>
+        <span class="italic font-instrument-serif">von</span> MORGEN
+      </h1>
+
+      <p class="mt-4 md:mt-5 text-white/70 text-sm md:text-base font-light max-w-md leading-relaxed">
+        Wir vernetzen Felder, Maschinen und Daten<br class="hidden sm:block">
+        für präzise Bewässerung und höhere Erträge.
+      </p>
+
+      <div class="cta-row mt-5 md:mt-6 flex flex-col sm:flex-row items-center gap-4">
+        <a href="#loesungen" class="group inline-flex items-center gap-2 bg-white text-black rounded-full px-7 py-3 text-sm font-medium transition-colors duration-200 hover:bg-white/90">
+          Lösungen ansehen
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <a href="#betrieb" class="inline-flex items-center gap-2 border border-white/40 text-white rounded-full px-7 py-3 text-sm font-medium transition-colors duration-200 hover:bg-white/10 hover:border-white/60">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+          Film ansehen
+        </a>
+      </div>
+    </div>
+    <div class="scroll-cue absolute left-6 md:left-12 lg:left-16 bottom-8 md:bottom-10 flex items-center gap-3 text-white/70 text-[11px] uppercase tracking-[0.22em]">
+      <span class="cue-track"><span class="cue-dot"></span></span>
+      <span>Scrollen</span>
+    </div>
+  </div>
+</section>
+</div>
+
+<div id="leaves" aria-hidden="true"></div>
+
+<!-- ================= CONTENT ================= -->
+<main class="relative z-20 bg-[#0a0a0a]">
+
+  <!-- Intro + stats -->
+  <section class="px-6 md:px-12 lg:px-16 pt-24 md:pt-32 pb-20 md:pb-28">
+    <div class="max-w-6xl mx-auto">
+      <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/50">Precision Farming</p>
+      <h2 class="reveal mt-5 font-instrument-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05] max-w-4xl" style="transition-delay:80ms">
+        Jeder Quadratmeter <span class="italic">zählt.</span>
+      </h2>
+      <p class="reveal mt-6 md:mt-8 text-white/65 text-base md:text-lg font-light leading-relaxed max-w-2xl" style="transition-delay:160ms">
+        Atelier verbindet Bodensensorik, Drohnen- und Satellitendaten mit autonomer Technik auf dem Feld.
+        So bekommt jede Pflanze genau das, was sie braucht – nicht mehr, nicht weniger.
+      </p>
+
+      <div class="mt-16 md:mt-24 grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+        <div class="reveal" style="transition-delay:0ms">
+          <div class="font-instrument-serif text-5xl md:text-6xl leading-none">−<span data-count="32">0</span>&nbsp;%</div>
+          <div class="hair mt-5 mb-3"></div>
+          <p class="text-sm text-white/60 font-light">Wasserverbrauch durch bedarfsgerechte Bewässerung</p>
+        </div>
+        <div class="reveal" style="transition-delay:80ms">
+          <div class="font-instrument-serif text-5xl md:text-6xl leading-none">+<span data-count="18">0</span>&nbsp;%</div>
+          <div class="hair mt-5 mb-3"></div>
+          <p class="text-sm text-white/60 font-light">Ertrag im dritten Jahr auf Partnerbetrieben</p>
+        </div>
+        <div class="reveal" style="transition-delay:160ms">
+          <div class="font-instrument-serif text-5xl md:text-6xl leading-none">±<span data-count="2">0</span>&nbsp;cm</div>
+          <div class="hair mt-5 mb-3"></div>
+          <p class="text-sm text-white/60 font-light">RTK-GPS-Genauigkeit bei Saat und Hacke</p>
+        </div>
+        <div class="reveal" style="transition-delay:240ms">
+          <div class="font-instrument-serif text-5xl md:text-6xl leading-none">24<span class="italic">/</span>7</div>
+          <div class="hair mt-5 mb-3"></div>
+          <p class="text-sm text-white/60 font-light">Feldüberwachung mit Sensoren und Satellit</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lösungen -->
+  <section id="loesungen" class="px-6 md:px-12 lg:px-16 py-20 md:py-28 border-t border-white/10">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/50">Lösungen</p>
+          <h2 class="reveal mt-5 font-instrument-serif text-4xl sm:text-5xl md:text-6xl leading-[1.05]" style="transition-delay:80ms">Vier Systeme, <span class="italic">ein</span> Feld.</h2>
+        </div>
+        <p class="reveal text-white/60 font-light text-sm md:text-base max-w-sm" style="transition-delay:160ms">Modular aufgebaut, einzeln einsetzbar – und zusammen ein Betrieb, der sich selbst erklärt.</p>
+      </div>
+
+      <div class="mt-12 md:mt-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <article class="reveal group" style="transition-delay:0ms">
+          <a href="#kontakt" class="card-img block aspect-[4/5] rounded-2xl overflow-hidden bg-white/5">
+            <img loading="lazy" class="w-full h-full object-cover" alt="Luftaufnahme präziser Pflanzreihen auf einem Feld"
+              src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=900&q=75"
+              srcset="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1100&q=75 1100w" sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw">
+          </a>
+          <div class="mt-5 flex items-baseline gap-4">
+            <span class="text-xs text-white/40">01</span>
+            <h3 class="font-instrument-serif text-2xl md:text-3xl">Präzisionsbewässerung</h3>
+          </div>
+          <p class="mt-2 pl-9 text-sm text-white/60 font-light leading-relaxed">Düsen- und Tröpfchensteuerung nach Bodenfeuchte, Wetter und Wachstumsphase – Reihe für Reihe.</p>
+        </article>
+
+        <article class="reveal group" style="transition-delay:80ms">
+          <a href="#kontakt" class="card-img block aspect-[4/5] rounded-2xl overflow-hidden bg-white/5">
+            <img loading="lazy" class="w-full h-full object-cover" alt="Drohne im Flug über landwirtschaftlicher Fläche"
+              src="https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=900&q=75"
+              srcset="https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=1100&q=75 1100w" sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw">
+          </a>
+          <div class="mt-5 flex items-baseline gap-4">
+            <span class="text-xs text-white/40">02</span>
+            <h3 class="font-instrument-serif text-2xl md:text-3xl">Drohnen-Monitoring</h3>
+          </div>
+          <p class="mt-2 pl-9 text-sm text-white/60 font-light leading-relaxed">Multispektrale Aufnahmen erkennen Trockenstress, Schädlinge und Nährstoffmangel, bevor man sie sieht.</p>
+        </article>
+
+        <article class="reveal group" style="transition-delay:160ms">
+          <a href="#kontakt" class="card-img block aspect-[4/5] rounded-2xl overflow-hidden bg-white/5">
+            <img loading="lazy" class="w-full h-full object-cover" alt="Traktor bei der Feldarbeit aus der Vogelperspektive"
+              src="https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=900&q=75"
+              srcset="https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1615811361523-6bd03d7748e7?auto=format&fit=crop&w=1100&q=75 1100w" sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw">
+          </a>
+          <div class="mt-5 flex items-baseline gap-4">
+            <span class="text-xs text-white/40">03</span>
+            <h3 class="font-instrument-serif text-2xl md:text-3xl">Autonome Feldroboter</h3>
+          </div>
+          <p class="mt-2 pl-9 text-sm text-white/60 font-light leading-relaxed">Säen, hacken, spritzen: Maschinen, die rund um die Uhr zentimetergenau arbeiten – ohne Fahrer.</p>
+        </article>
+
+        <article class="reveal group" style="transition-delay:240ms">
+          <a href="#kontakt" class="card-img block aspect-[4/5] rounded-2xl overflow-hidden bg-white/5">
+            <img loading="lazy" class="w-full h-full object-cover" alt="Jungpflanzen in Anzuchtschalen unter LED-Licht"
+              src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=900&q=75"
+              srcset="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=600&q=75 600w, https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1100&q=75 1100w" sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw">
+          </a>
+          <div class="mt-5 flex items-baseline gap-4">
+            <span class="text-xs text-white/40">04</span>
+            <h3 class="font-instrument-serif text-2xl md:text-3xl">Indoor &amp; Vertical Farming</h3>
+          </div>
+          <p class="mt-2 pl-9 text-sm text-white/60 font-light leading-relaxed">Klimageführte Anzucht unter LED – ganzjährig, wassersparend und ohne chemischen Pflanzenschutz.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Technologie -->
+  <section id="technologie" class="px-6 md:px-12 lg:px-16 py-20 md:py-28 border-t border-white/10">
+    <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+      <div class="reveal lg:sticky lg:top-24">
+        <div class="relative aspect-[4/5] rounded-3xl overflow-hidden bg-white/5">
+          <img loading="lazy" class="w-full h-full object-cover" alt="Geometrische Pflanzreihen in einer hügeligen Landschaft"
+            src="https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?auto=format&fit=crop&w=1200&q=75">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <div class="absolute left-5 bottom-5 right-5 flex items-center justify-between rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 px-4 py-3">
+            <div class="flex items-center gap-3">
+              <span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span></span>
+              <span class="text-xs text-white/80">Live · Feld 7 · Reihe 12</span>
+            </div>
+            <span class="text-xs font-medium">Bodenfeuchte <span id="liveMoist">76</span> %</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/50">Technologie</p>
+        <h2 class="reveal mt-5 font-instrument-serif text-4xl sm:text-5xl md:text-6xl leading-[1.05]" style="transition-delay:80ms">Vom Sensor <span class="italic">bis</span> zur Entscheidung.</h2>
+        <p class="reveal mt-6 text-white/60 font-light leading-relaxed max-w-lg" style="transition-delay:160ms">Daten sind nur dann wertvoll, wenn sie auf dem Feld ankommen. Unsere Plattform schließt den Kreis von der Messung bis zur Maschine.</p>
+
+        <ol class="mt-12 border-t border-white/10">
+          <li class="reveal py-7 border-b border-white/10 grid grid-cols-[3rem_1fr] gap-4">
+            <span class="text-xs text-white/40 pt-2">01</span>
+            <div><h3 class="font-instrument-serif text-2xl md:text-3xl">Bodensensorik</h3><p class="mt-2 text-sm text-white/60 font-light leading-relaxed">Feuchte, Temperatur, Leitfähigkeit und pH in drei Tiefen – gemessen alle zehn Minuten, per LoRa ins Netz.</p></div>
+          </li>
+          <li class="reveal py-7 border-b border-white/10 grid grid-cols-[3rem_1fr] gap-4" style="transition-delay:60ms">
+            <span class="text-xs text-white/40 pt-2">02</span>
+            <div><h3 class="font-instrument-serif text-2xl md:text-3xl">Satelliten- &amp; Drohnendaten</h3><p class="mt-2 text-sm text-white/60 font-light leading-relaxed">NDVI-Karten und Wärmebilder zeigen, wo das Feld Hilfe braucht – und wo nicht.</p></div>
+          </li>
+          <li class="reveal py-7 border-b border-white/10 grid grid-cols-[3rem_1fr] gap-4" style="transition-delay:120ms">
+            <span class="text-xs text-white/40 pt-2">03</span>
+            <div><h3 class="font-instrument-serif text-2xl md:text-3xl">KI-Prognosen</h3><p class="mt-2 text-sm text-white/60 font-light leading-relaxed">Modelle für Ertrag, Krankheitsdruck und Wasserbedarf – trainiert auf Ihren Böden, nicht auf Durchschnittswerten.</p></div>
+          </li>
+          <li class="reveal py-7 border-b border-white/10 grid grid-cols-[3rem_1fr] gap-4" style="transition-delay:180ms">
+            <span class="text-xs text-white/40 pt-2">04</span>
+            <div><h3 class="font-instrument-serif text-2xl md:text-3xl">Variable Ausbringung</h3><p class="mt-2 text-sm text-white/60 font-light leading-relaxed">Saatgut, Dünger und Wasser teilflächenspezifisch – jede Düse, jedes Schar einzeln gesteuert.</p></div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Anbautechniken (horizontal strip) -->
+  <section id="techniken" class="py-20 md:py-28 border-t border-white/10 overflow-hidden">
+    <div class="px-6 md:px-12 lg:px-16">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/50">Anbautechniken</p>
+          <h2 class="reveal mt-5 font-instrument-serif text-4xl sm:text-5xl md:text-6xl leading-[1.05]" style="transition-delay:80ms">Methoden <span class="italic">der</span> Zukunft.</h2>
+        </div>
+        <p class="reveal text-white/60 font-light text-sm md:text-base max-w-sm" style="transition-delay:160ms">Alte Prinzipien, neu gedacht – mit Daten, die zeigen, was auf Ihrem Boden wirklich funktioniert.</p>
+      </div>
+    </div>
+
+    <div class="strip mt-12 md:mt-16 flex gap-5 md:gap-6 overflow-x-auto snap-x snap-mandatory px-6 md:px-12 lg:px-16 scroll-pl-6 md:scroll-pl-12 lg:scroll-pl-16 pb-4">
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Streifenanbau: abwechselnde Kulturen in Streifen" src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Streifenanbau</h3><p class="mt-1 text-sm text-white/60 font-light">Wechselnde Kulturen in schmalen Streifen senken Schädlingsdruck und Erosion.</p></figcaption>
+      </figure>
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]" style="transition-delay:60ms">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Junge Pflanzen in exakten Reihen" src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Präzisionssaat</h3><p class="mt-1 text-sm text-white/60 font-light">Einzelkornablage mit RTK-GPS: gleichmäßige Bestände, weniger Saatgut.</p></figcaption>
+      </figure>
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]" style="transition-delay:120ms">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Baum über einem Getreidefeld im Abendlicht" src="https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Agroforst</h3><p class="mt-1 text-sm text-white/60 font-light">Baumreihen im Acker: Schatten, Windschutz und Humusaufbau zugleich.</p></figcaption>
+      </figure>
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]" style="transition-delay:180ms">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Hand setzt Sämlinge in eine Anzuchtplatte" src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Kontrollierte Anzucht</h3><p class="mt-1 text-sm text-white/60 font-light">Pikieren nach Keimrate und Wurzelbild – jede Platte dokumentiert.</p></figcaption>
+      </figure>
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]" style="transition-delay:240ms">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Pflanzung auf Mulchfolie in Reihen" src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Mulch &amp; Bodenschutz</h3><p class="mt-1 text-sm text-white/60 font-light">Abbaubare Folien und Zwischenfrüchte halten Wasser im Boden.</p></figcaption>
+      </figure>
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]" style="transition-delay:300ms">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Hände pflanzen Setzlinge in dunkle Erde" src="https://images.unsplash.com/photo-1611843467160-25afb8df1074?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Regenerative Bodenpflege</h3><p class="mt-1 text-sm text-white/60 font-light">Minimale Bearbeitung, Dauerbegrünung, lebendiger Boden.</p></figcaption>
+      </figure>
+      <figure class="reveal snap-start shrink-0 w-[78vw] sm:w-[46vw] lg:w-[30vw] xl:w-[26vw]" style="transition-delay:360ms">
+        <div class="card-img aspect-[3/4] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Gewächshaus mit Tomatenpflanzen" src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=900&q=75"></div>
+        <figcaption class="mt-4"><h3 class="font-instrument-serif text-2xl">Gewächshaus-Klimasteuerung</h3><p class="mt-1 text-sm text-white/60 font-light">Lüftung, Licht und Bewässerung reagieren automatisch auf jede Pflanze.</p></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Betrieb / Case -->
+  <section id="betrieb" class="relative min-h-[90vh] flex items-end overflow-hidden border-t border-white/10">
+    <img loading="lazy" class="absolute inset-0 w-full h-full object-cover" alt="Mähdrescher bei der Ernte im Abendlicht"
+      src="https://images.unsplash.com/photo-1527847263472-aa5338d178b8?auto=format&fit=crop&w=1800&q=75">
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/55 to-[#0a0a0a]/10"></div>
+    <div class="relative px-6 md:px-12 lg:px-16 pt-40 pb-20 md:pb-28 w-full">
+      <div class="max-w-6xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-12 items-end">
+        <div>
+          <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/60">Betrieb · Hof Lindenau, Niedersachsen</p>
+          <blockquote class="reveal mt-6 font-instrument-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1]" style="transition-delay:80ms">
+            „Wir steuern 420 Hektar vom Tablet – <span class="italic">und</span> verbrauchen ein Drittel weniger Wasser.“
+          </blockquote>
+          <p class="reveal mt-6 text-sm text-white/70" style="transition-delay:160ms">Jonas Lindner, Betriebsleiter</p>
+        </div>
+        <div class="reveal grid grid-cols-3 lg:grid-cols-1 gap-6 lg:gap-8 lg:border-l lg:border-white/15 lg:pl-10" style="transition-delay:240ms">
+          <div><div class="font-instrument-serif text-4xl md:text-5xl">420</div><p class="mt-1 text-xs text-white/60">Hektar vernetzt</p></div>
+          <div><div class="font-instrument-serif text-4xl md:text-5xl">1.280</div><p class="mt-1 text-xs text-white/60">Bodensensoren im Einsatz</p></div>
+          <div><div class="font-instrument-serif text-4xl md:text-5xl">3</div><p class="mt-1 text-xs text-white/60">autonome Feldroboter</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Magazin -->
+  <section id="magazin" class="px-6 md:px-12 lg:px-16 py-20 md:py-28 border-t border-white/10">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/50">Magazin</p>
+          <h2 class="reveal mt-5 font-instrument-serif text-4xl sm:text-5xl md:text-6xl leading-[1.05]" style="transition-delay:80ms">Wissen <span class="italic">vom</span> Feld.</h2>
+        </div>
+        <a href="#magazin" class="reveal text-sm text-white/70 hover:text-white transition-colors" style="transition-delay:160ms">Alle Beiträge →</a>
+      </div>
+
+      <div class="mt-12 md:mt-16 grid md:grid-cols-3 gap-8">
+        <article class="reveal">
+          <a href="#magazin" class="card-img block aspect-[16/11] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Getreidefeld bei Sonnenaufgang" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=75"></a>
+          <p class="mt-5 text-xs text-white/45">12. Oktober 2026 · Agronomie</p>
+          <h3 class="mt-2 font-instrument-serif text-2xl md:text-3xl leading-tight">Warum Streifenanbau Erträge stabilisiert</h3>
+        </article>
+        <article class="reveal" style="transition-delay:80ms">
+          <a href="#magazin" class="card-img block aspect-[16/11] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Zwei Traktoren auf einem Gemüsefeld" src="https://images.unsplash.com/photo-1588580000645-4562a6d2c839?auto=format&fit=crop&w=900&q=75"></a>
+          <p class="mt-5 text-xs text-white/45">28. September 2026 · Technik</p>
+          <h3 class="mt-2 font-instrument-serif text-2xl md:text-3xl leading-tight">RTK-GPS erklärt: Was ±2 cm im Feld bedeuten</h3>
+        </article>
+        <article class="reveal" style="transition-delay:160ms">
+          <a href="#magazin" class="card-img block aspect-[16/11] rounded-2xl overflow-hidden bg-white/5"><img loading="lazy" class="w-full h-full object-cover" alt="Erde und Gartenschaufel auf einem Tisch" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=75"></a>
+          <p class="mt-5 text-xs text-white/45">9. September 2026 · Boden</p>
+          <h3 class="mt-2 font-instrument-serif text-2xl md:text-3xl leading-tight">Boden lesen lernen: Sensorik für Einsteiger</h3>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kontakt + Footer -->
+  <section id="kontakt" class="px-6 md:px-12 lg:px-16 pt-24 md:pt-32 pb-10 border-t border-white/10">
+    <div class="max-w-6xl mx-auto">
+      <div class="max-w-3xl">
+        <p class="reveal text-[11px] uppercase tracking-[0.22em] text-white/50">Kontakt</p>
+        <h2 class="reveal mt-5 font-instrument-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.05]" style="transition-delay:80ms">Bereit <span class="italic">für</span> die Ernte von morgen?</h2>
+        <p class="reveal mt-6 text-white/60 font-light leading-relaxed max-w-xl" style="transition-delay:160ms">In einem 30-minütigen Gespräch schauen wir auf Ihre Flächen, Kulturen und Ziele – und zeigen, wo Daten den größten Hebel haben.</p>
+        <div class="reveal mt-8 flex flex-col sm:flex-row gap-4" style="transition-delay:240ms">
+          <a href="#kontakt" class="group inline-flex items-center justify-center gap-2 bg-white text-black rounded-full px-7 py-3 text-sm font-medium hover:bg-white/90 transition-colors">Demo anfragen
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+          <a href="#kontakt" class="inline-flex items-center justify-center gap-2 border border-white/40 text-white rounded-full px-7 py-3 text-sm font-medium hover:bg-white/10 hover:border-white/60 transition-colors">Gespräch vereinbaren</a>
+        </div>
+      </div>
+
+      <footer class="mt-24 md:mt-32 pt-8 border-t border-white/10 flex flex-col md:flex-row md:items-center md:justify-between gap-6 text-sm text-white/50">
+        <div class="flex items-center gap-8">
+          <span class="text-white font-semibold text-lg tracking-tight">Atelier</span>
+          <nav class="flex flex-wrap gap-6">
+            <a href="#loesungen" class="hover:text-white transition-colors">Lösungen</a>
+            <a href="#technologie" class="hover:text-white transition-colors">Technologie</a>
+            <a href="#betrieb" class="hover:text-white transition-colors">Betrieb</a>
+            <a href="#magazin" class="hover:text-white transition-colors">Magazin</a>
+          </nav>
+        </div>
+        <p>© 2026 Atelier · Impressum · Datenschutz</p>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<!-- Mobile menu overlay -->
+<div id="mobileMenu" data-open="false" class="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Menü">
+  <div data-backdrop class="absolute inset-0 bg-black/90 backdrop-blur-xl opacity-0 transition-opacity duration-700 ease-menu"></div>
+  <div data-panel class="relative z-10 flex flex-col h-full opacity-0 transition-opacity duration-700 ease-menu">
+    <div class="flex items-center justify-between px-6 md:px-12 lg:px-16 py-5 md:py-6">
+      <span class="text-white font-semibold text-lg tracking-tight font-sans">Atelier</span>
+      <button id="closeMenu" type="button" class="relative w-6 h-6 flex items-center justify-center" aria-label="Menü schließen">
+        <span class="absolute w-6 h-[2px] bg-white rounded-full rotate-45"></span>
+        <span class="absolute w-6 h-[2px] bg-white rounded-full -rotate-45"></span>
+      </button>
+    </div>
+    <nav class="flex-1 flex flex-col justify-center px-6">
+      <a href="#loesungen"   data-menu-link class="block text-center text-4xl sm:text-5xl font-instrument-serif text-white py-4 border-b border-white/10 translate-y-8 opacity-0 transition-all duration-700 ease-menu hover:pl-4">Lösungen</a>
+      <a href="#technologie" data-menu-link class="block text-center text-4xl sm:text-5xl font-instrument-serif text-white py-4 border-b border-white/10 translate-y-8 opacity-0 transition-all duration-700 ease-menu hover:pl-4">Technologie</a>
+      <a href="#betrieb"     data-menu-link class="block text-center text-4xl sm:text-5xl font-instrument-serif text-white py-4 border-b border-white/10 translate-y-8 opacity-0 transition-all duration-700 ease-menu hover:pl-4">Betrieb</a>
+      <a href="#magazin"     data-menu-link class="block text-center text-4xl sm:text-5xl font-instrument-serif text-white py-4 border-b border-white/10 translate-y-8 opacity-0 transition-all duration-700 ease-menu hover:pl-4">Magazin</a>
+      <a href="#kontakt"     data-menu-link class="block text-center text-4xl sm:text-5xl font-instrument-serif text-white py-4 border-b border-white/10 translate-y-8 opacity-0 transition-all duration-700 ease-menu hover:pl-4">Kontakt</a>
+    </nav>
+    <div class="px-6 pb-8 pt-4">
+      <a href="#kontakt" data-menu-cta class="block w-full text-center bg-white text-black rounded-full py-4 text-sm font-medium opacity-0 translate-y-4 transition-all duration-700 ease-menu">Demo anfragen</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+/* ---------------- mobile menu + header ---------------- */
+(function () {
+  var html = document.documentElement;
+  var burger = document.getElementById('hamburger');
+  var menu = document.getElementById('mobileMenu');
+  var closeBtn = document.getElementById('closeMenu');
+  var backdrop = menu.querySelector('[data-backdrop]');
+  var panel = menu.querySelector('[data-panel]');
+  var links = Array.prototype.slice.call(menu.querySelectorAll('[data-menu-link]'));
+  var cta = menu.querySelector('[data-menu-cta]');
+  var closeTimer = null;
+
+  function setOpen(open) {
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+    burger.setAttribute('data-open', String(open));
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+    html.classList.toggle('menu-open', open);
+
+    if (open) {
+      menu.classList.remove('closing');
+      menu.setAttribute('data-open', 'true');
+      requestAnimationFrame(function () {
+        backdrop.classList.replace('opacity-0', 'opacity-100');
+        panel.classList.replace('opacity-0', 'opacity-100');
+        links.forEach(function (a, i) {
+          a.style.transitionDelay = (150 + i * 80) + 'ms';
+          a.classList.remove('translate-y-8', 'opacity-0');
+          a.classList.add('translate-y-0', 'opacity-100');
+        });
+        cta.style.transitionDelay = '550ms';
+        cta.classList.remove('opacity-0', 'translate-y-4');
+        cta.classList.add('opacity-100', 'translate-y-0');
+      });
+    } else {
+      menu.classList.add('closing');
+      menu.setAttribute('data-open', 'false');
+      backdrop.classList.replace('opacity-100', 'opacity-0');
+      panel.classList.replace('opacity-100', 'opacity-0');
+      links.forEach(function (a) {
+        a.style.transitionDelay = '0ms';
+        a.classList.remove('translate-y-0', 'opacity-100');
+        a.classList.add('translate-y-8', 'opacity-0');
+      });
+      cta.style.transitionDelay = '0ms';
+      cta.classList.remove('opacity-100', 'translate-y-0');
+      cta.classList.add('opacity-0', 'translate-y-4');
+      closeTimer = setTimeout(function () { menu.classList.remove('closing'); }, 700);
+    }
+  }
+
+  burger.addEventListener('click', function () { setOpen(burger.getAttribute('data-open') !== 'true'); });
+  closeBtn.addEventListener('click', function () { setOpen(false); });
+  links.concat([cta]).forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && burger.getAttribute('data-open') === 'true') setOpen(false); });
+  var mq = window.matchMedia('(min-width: 768px)');
+  (mq.addEventListener ? mq.addEventListener('change', onMq) : mq.addListener(onMq));
+  function onMq(e) { if (e.matches && burger.getAttribute('data-open') === 'true') setOpen(false); }
+
+  var video = document.getElementById('bgVideo');
+  if (video) {
+    var p = video.play();
+    if (p && p.catch) p.catch(function () {
+      var kick = function () { video.play().catch(function(){}); window.removeEventListener('pointerdown', kick); };
+      window.addEventListener('pointerdown', kick, { once: true });
+    });
+  }
+})();
+
+/* ---------------- scroll: hero push-in, header, reveals, counters ---------------- */
+(function () {
+  var wrap = document.getElementById('heroWrap');
+  var scaleEl = document.getElementById('heroScale');
+  var content = document.getElementById('heroContent');
+  var shade = document.getElementById('heroShade');
+  var header = document.getElementById('siteHeader');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ticking = false;
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+  function update() {
+    ticking = false;
+    var y = window.scrollY || window.pageYOffset;
+    var range = Math.max(1, wrap.offsetHeight - window.innerHeight);
+    var p = clamp(y / range, 0, 1);
+    var e = p * p * (3 - 2 * p); // smoothstep
+    scaleEl.style.transform = 'scale(' + (1 + (reduced ? 0.08 : 0.42) * e) + ')';
+    content.style.opacity = String(1 - clamp(p * 1.9, 0, 1));
+    content.style.transform = 'translateY(' + (-70 * e) + 'px)';
+    shade.style.opacity = String(clamp((p - 0.5) / 0.5, 0, 1) * 0.92);
+    header.classList.toggle('scrolled', y > 40);
+    if (window.__leaves) window.__leaves(y);
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+
+  // reveal directions: headings from left, side texts from right, media scale up
+  document.querySelectorAll('main h2.reveal, main blockquote.reveal, #technologie .reveal.lg\\:sticky').forEach(function (el) { el.dataset.r = 'l'; });
+  document.querySelectorAll('main p.reveal.max-w-sm, main a.reveal, #technologie li.reveal, #betrieb .reveal.grid').forEach(function (el) { el.dataset.r = 'r'; });
+  document.querySelectorAll('main article.reveal, main figure.reveal, main .grid > .reveal').forEach(function (el) { if (!el.dataset.r) el.dataset.r = 's'; });
+
+  // floating leaves: drift in from the sides, parallax with scroll
+  var leafBox = document.getElementById('leaves');
+  var LEAF = ['M50 4C20 22 10 52 22 80c6 13 18 18 28 16 10 2 22-3 28-16C90 52 80 22 50 4z', 'M50 6C30 30 18 58 30 84c5 10 14 12 20 10 6 2 15 0 20-10C82 58 70 30 50 6z'];
+  var COLS = [['#7fcf6a', '#3f8f3a'], ['#a6d96a', '#5a9b34'], ['#5fbf8f', '#2f7d5a'], ['#c9e27a', '#7aa43a']];
+  var leaves = [];
+  if (!reduced) {
+    for (var i = 0; i < 10; i++) {
+      var left = i % 2 === 0, c = COLS[i % COLS.length], s = 26 + Math.random() * 34;
+      var el = document.createElement('div');
+      el.className = 'leaf';
+      el.style.setProperty('--s', s + 'px');
+      el.style.setProperty('--d', (3 + Math.random() * 3).toFixed(2) + 's');
+      el.style.setProperty('--r', (left ? 25 : -25) + Math.round(Math.random() * 40 - 20) + 'deg');
+      el.style.top = (8 + Math.random() * 80) + '%';
+      el.style[left ? 'left' : 'right'] = (Math.random() * 7) + 'vw';
+      el.innerHTML = '<svg viewBox="0 0 100 100"><defs><linearGradient id="lg' + i + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset="1" stop-color="' + c[1] + '"/></linearGradient></defs><path d="' + LEAF[i % 2] + '" fill="url(#lg' + i + ')"/><path d="M50 10 L50 94" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none"/></svg>';
+      leafBox.appendChild(el);
+      leaves.push({ el: el, dir: left ? -1 : 1, depth: 0.3 + Math.random() * 0.9, start: 0.6 + Math.random() * 1.6, ph: Math.random() * 6.28 });
+    }
+  }
+  function updateLeaves(y) {
+    var vh = window.innerHeight, on = y > vh * 0.45;
+    leafBox.classList.toggle('on', on);
+    for (var i = 0; i < leaves.length; i++) {
+      var L = leaves[i];
+      // enter: slide in from off-screen side as you pass the hero, then drift with parallax
+      var k = clamp((y / vh - L.start * 0.6) / 0.8, 0, 1), e = 1 - Math.pow(1 - k, 3);
+      var x = L.dir * (1 - e) * 260 + L.dir * Math.sin(y / 420 + L.ph) * 18;
+      var ty = -((y * L.depth * 0.25) % (vh * 1.2)) + Math.cos(y / 300 + L.ph) * 14;
+      L.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0) scale(' + (0.7 + 0.3 * e) + ')';
+    }
+  }
+  window.__leaves = updateLeaves;
+  updateLeaves(window.scrollY || 0);
+
+  // reveal on scroll
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+  // count-up numbers
+  var cio = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      cio.unobserve(en.target);
+      var el = en.target, to = +el.getAttribute('data-count'), t0 = performance.now(), dur = 1400;
+      (function step(now) {
+        var k = clamp((now - t0) / dur, 0, 1), ease = 1 - Math.pow(1 - k, 3);
+        el.textContent = Math.round(to * ease);
+        if (k < 1) requestAnimationFrame(step);
+      })(t0);
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('[data-count]').forEach(function (el) { cio.observe(el); });
+
+  // live moisture badge
+  var lm = document.getElementById('liveMoist'), lv = 76;
+  setInterval(function () { lv = clamp(lv + Math.round(Math.random() * 3 - 1.5), 68, 84); lm.textContent = lv; }, 2200);
+})();
+
+/* ---------------- video FX: sky, sprays, dashboard ---------------- */
+(function () {
+  var VW = 1920, VH = 1080;          // intrinsic video size
+  var LOOP = 8.04;                   // video length (s)
+  var ZOOM = 0.034, ZX = 960, ZY = 1100; // the shot slowly pushes in over the loop
+  var section = document.getElementById('top');
+  var video = document.getElementById('bgVideo');
+  var fx = document.getElementById('fx');
+  var stage = document.getElementById('fxStage');
+  var skyC = document.getElementById('skyCanvas');
+  var sprayC = document.getElementById('sprayCanvas');
+  var dashEl = document.getElementById('dash');
+  var dashC = document.getElementById('dashCanvas');
+  var sky = skyC.getContext('2d');
+  var spr = sprayC.getContext('2d');
+  var dsh = dashC.getContext('2d');
+  var dpr = Math.min(window.devicePixelRatio || 1, 3);
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var k = 1, ox = 0, oy = 0, dashQ = 2;
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  /* ---- layout: replicate object-cover ---- */
+  function layout() {
+    var W = section.clientWidth, H = section.clientHeight;
+    k = Math.max(W / VW, H / VH);
+    ox = (W - VW * k) / 2; oy = (H - VH * k) / 2;
+    var full = Math.min(VW, Math.round(VW * k * dpr));
+    sprayC.width = full; sprayC.height = Math.round(full * VH / VW);
+    var half = Math.min(1280, Math.round(VW * k * dpr * 0.5));
+    skyC.width = half; skyC.height = Math.round(half * VH / VW);
+    dashQ = clamp(k * dpr * 1.4, 2, 5);
+    dashC.width = Math.round(161 * dashQ); dashC.height = Math.round(80 * dashQ);
+  }
+  window.addEventListener('resize', layout);
+  layout();
+
+  function applyStage(t) {
+    var s = 1 + ZOOM * clamp(t / LOOP, 0, 1);
+    stage.style.transform = 'translate(' + ox + 'px,' + oy + 'px) scale(' + k + ') translate(' + ZX + 'px,' + ZY + 'px) scale(' + s + ') translate(' + (-ZX) + 'px,' + (-ZY) + 'px)';
+  }
+
+  /* ---- sprites ---- */
+  function mistSprite(size) {
+    var c = document.createElement('canvas'); c.width = c.height = size;
+    var g = c.getContext('2d');
+    var r = size / 2;
+    var grd = g.createRadialGradient(r, r, 0, r, r, r);
+    grd.addColorStop(0, 'rgba(235,247,255,0.55)');
+    grd.addColorStop(0.35, 'rgba(225,242,255,0.22)');
+    grd.addColorStop(1, 'rgba(220,240,255,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, size, size);
+    return c;
+  }
+  function cloudSprite(w, h, blobs, streak) {
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var g = c.getContext('2d');
+    for (var i = 0; i < blobs; i++) {
+      var cx = streak ? rand(w * 0.1, w * 0.9) : rand(w * 0.2, w * 0.8);
+      var cy = h / 2 + rand(-h * 0.18, h * 0.18);
+      var rx = streak ? rand(w * 0.18, w * 0.4) : rand(w * 0.12, w * 0.26);
+      var ry = streak ? rand(h * 0.12, h * 0.3) : rand(h * 0.18, h * 0.42);
+      g.save(); g.translate(cx, cy); g.scale(rx, ry);
+      var grd = g.createRadialGradient(0, 0, 0, 0, 0, 1);
+      grd.addColorStop(0, 'rgba(255,255,255,' + rand(0.10, 0.2) + ')');
+      grd.addColorStop(0.6, 'rgba(255,255,255,' + rand(0.03, 0.07) + ')');
+      grd.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = grd; g.beginPath(); g.arc(0, 0, 1, 0, Math.PI * 2); g.fill();
+      g.restore();
+    }
+    return c;
+  }
+  var MIST = mistSprite(64);
+
+  /* ---- sky: drifting clouds + slow light ---- */
+  var clouds = [];
+  for (var i = 0; i < 6; i++) {
+    var w = rand(560, 1050);
+    clouds.push({ img: cloudSprite(256, 128, 14, false), x: rand(-w, VW), y: rand(90, 520), w: w, h: w * rand(0.34, 0.5), v: rand(5, 10), a: rand(0.14, 0.26), ph: rand(0, 6.28) });
+  }
+  for (var j = 0; j < 4; j++) {
+    var w2 = rand(900, 1500);
+    clouds.push({ img: cloudSprite(512, 64, 10, true), x: rand(-w2, VW), y: rand(30, 470), w: w2, h: rand(60, 130), v: rand(8, 14), a: rand(0.10, 0.18), ph: rand(0, 6.28) });
+  }
+  function drawSky(t, dt) {
+    var sw = skyC.width, sh = skyC.height;
+    sky.setTransform(sw / VW, 0, 0, sh / VH, 0, 0);
+    sky.clearRect(0, 0, VW, VH);
+    var la = 0.05 + 0.025 * Math.sin(t * 0.21);
+    var lg = sky.createRadialGradient(1500, -120, 0, 1500, -120, 1300);
+    lg.addColorStop(0, 'rgba(255,245,220,' + la + ')');
+    lg.addColorStop(1, 'rgba(255,245,220,0)');
+    sky.fillStyle = lg; sky.fillRect(0, 0, VW, 820);
+    for (var i = 0; i < clouds.length; i++) {
+      var c = clouds[i];
+      c.x += c.v * dt;
+      if (c.x > VW + 40) c.x = -c.w - 40;
+      sky.globalAlpha = c.a * (0.8 + 0.2 * Math.sin(t * 0.3 + c.ph));
+      sky.drawImage(c.img, c.x, c.y - c.h / 2, c.w, c.h);
+    }
+    sky.globalAlpha = 1;
+    sky.globalCompositeOperation = 'destination-out';
+    var fg = sky.createLinearGradient(0, 560, 0, 880);
+    fg.addColorStop(0, 'rgba(0,0,0,0)'); fg.addColorStop(1, 'rgba(0,0,0,1)');
+    sky.fillStyle = fg; sky.fillRect(0, 560, VW, 520);
+    sky.globalCompositeOperation = 'source-over';
+  }
+
+  /* ---- water sprays ---- */
+  var NOZZLES = [
+    [302, 596], [393, 598], [484, 600], [576, 602], [665, 604],
+    [1283, 604], [1373, 602], [1460, 600], [1549, 598], [1638, 596]
+  ];
+  var FALL = 365, PER = reduced ? 24 : 84, DROPS = reduced ? 0 : 14;
+  var nozzles = NOZZLES.map(function (n, i) {
+    var parts = [], drops = [];
+    for (var p = 0; p < PER; p++) parts.push(newPart(true));
+    for (var d = 0; d < DROPS; d++) drops.push({ p: Math.random(), jx: rand(-1, 1), v: rand(1.0, 1.6), len: rand(8, 16) });
+    return { x: n[0], y: n[1], ph: rand(0, 6.28), i: i, parts: parts, drops: drops };
+  });
+  function newPart(randomP) {
+    var u = Math.random();
+    return { p: randomP ? Math.random() : 0, jx: (Math.random() < 0.5 ? -1 : 1) * Math.pow(u, 1.4), v: rand(0.34, 0.56), s: rand(0.7, 1.3), ph: rand(0, 6.28) };
+  }
+  function halfW(p) { return 6 + 98 * Math.pow(p, 0.85); }
+  function sway(t, p, ph, i) {
+    return Math.sin(t * 1.3 + p * 4.2 + ph) * (4 + 30 * p) + Math.sin(t * 0.37 + i * 0.9) * 22 * p;
+  }
+  function drawSprays(t, dt) {
+    var sw = sprayC.width, sh = sprayC.height;
+    spr.setTransform(sw / VW, 0, 0, sh / VH, 0, 0);
+    spr.clearRect(0, 0, VW, VH);
+    spr.globalCompositeOperation = 'lighter';
+    for (var n = 0; n < nozzles.length; n++) {
+      var nz = nozzles[n], nx = nz.x, ny = nz.y;
+      var L = [], R = [], steps = 9;
+      for (var s = 0; s <= steps; s++) {
+        var p = s / steps, y = ny + FALL * p, hw = halfW(p), sw1 = sway(t, p, nz.ph, nz.i);
+        L.push([nx - hw + sw1 + Math.sin(t * 1.1 + p * 6 + nz.ph) * 4 * p, y]);
+        R.push([nx + hw + sw1 - Math.sin(t * 1.4 + p * 5 + nz.ph) * 4 * p, y]);
+      }
+      var cg = spr.createLinearGradient(0, ny, 0, ny + FALL);
+      cg.addColorStop(0, 'rgba(225,242,255,0.30)');
+      cg.addColorStop(0.45, 'rgba(220,240,255,0.15)');
+      cg.addColorStop(1, 'rgba(215,238,255,0)');
+      spr.fillStyle = cg;
+      spr.beginPath(); spr.moveTo(L[0][0], L[0][1]);
+      for (var a = 1; a < L.length; a++) spr.lineTo(L[a][0], L[a][1]);
+      for (var b = R.length - 1; b >= 0; b--) spr.lineTo(R[b][0], R[b][1]);
+      spr.closePath(); spr.fill();
+      var ng = spr.createRadialGradient(nx, ny + 8, 0, nx, ny + 8, 34);
+      ng.addColorStop(0, 'rgba(240,250,255,0.55)'); ng.addColorStop(1, 'rgba(240,250,255,0)');
+      spr.fillStyle = ng; spr.fillRect(nx - 34, ny - 26, 68, 68);
+      for (var q = 0; q < nz.parts.length; q++) {
+        var pt = nz.parts[q];
+        pt.p += pt.v * dt;
+        if (pt.p >= 1) { var np = newPart(false); pt.p = 0; pt.jx = np.jx; pt.v = np.v; pt.s = np.s; pt.ph = np.ph; }
+        var pp = pt.p;
+        var x = nx + pt.jx * halfW(pp) + sway(t, pp, pt.ph, nz.i) * 0.9;
+        var y2 = ny + FALL * pp;
+        var r = (5 + 26 * pp) * pt.s;
+        spr.globalAlpha = 0.6 * Math.pow(1 - pp, 1.15) * Math.min(1, pp * 9);
+        spr.drawImage(MIST, x - r, y2 - r, r * 2, r * 2);
+      }
+      spr.globalAlpha = 1;
+      spr.lineWidth = 1.3; spr.lineCap = 'round';
+      for (var d = 0; d < nz.drops.length; d++) {
+        var dr = nz.drops[d];
+        dr.p += dr.v * dt;
+        if (dr.p >= 1) { dr.p = 0; dr.jx = rand(-1, 1); dr.v = rand(1.0, 1.6); }
+        var dx = nx + dr.jx * halfW(dr.p) * 0.55 + sway(t, dr.p, nz.ph, nz.i) * 0.6;
+        var dy = ny + FALL * dr.p;
+        spr.strokeStyle = 'rgba(245,252,255,' + (0.42 * (1 - dr.p)) + ')';
+        spr.beginPath(); spr.moveTo(dx, dy); spr.lineTo(dx + dr.jx * 1.5, dy + dr.len * (0.5 + dr.p)); spr.stroke();
+      }
+      var hz = spr.createRadialGradient(0, 0, 0, 0, 0, 100);
+      var ha = 0.12 + 0.05 * Math.sin(t * 0.9 + nz.ph);
+      hz.addColorStop(0, 'rgba(230,245,255,' + ha + ')'); hz.addColorStop(1, 'rgba(230,245,255,0)');
+      spr.save(); spr.translate(nx, ny + FALL - 14); spr.scale(1.7, 0.5); spr.fillStyle = hz; spr.beginPath(); spr.arc(0, 0, 100, 0, 6.283); spr.fill(); spr.restore();
+    }
+    spr.globalAlpha = 1;
+    spr.globalCompositeOperation = 'source-over';
+  }
+
+  /* ---- dashboard: big glowing eyes + analytics on click ---- */
+  var D = { x: 7, y: 7, w: 147, h: 66 };       // display glass inside the dash box
+  var COLS = 60, ROWS = 27, PX = D.w / COLS, PY = D.h / ROWS;
+  var CYAN = '#5fe3ff', CYAN_DIM = 'rgba(95,227,255,0.10)', GREEN = '#8cf5a6';
+  var face = { blinkAt: 2.5, blinking: 0, look: 0, lookY: 0, lookT: 0, lookNext: 4, mood: 'idle', moodUntil: 0, moodNext: 6 };
+  var ptr = { x: 0, y: 0, at: -1e9 };
+  document.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse' || e.pointerType === 'pen') { ptr.x = e.clientX; ptr.y = e.clientY; ptr.at = performance.now(); } }, { passive: true });
+  var view = 0, viewMix = 0, nowT = 0;
+  dashEl.addEventListener('click', function () {
+    view = view ? 0 : 1;
+    if (view === 0) { face.mood = 'happy'; face.moodUntil = nowT + 1.5; }
+  });
+  var bars = [], barT = 0;
+  for (var bi = 0; bi < 12; bi++) bars.push({ v: rand(3, 11), to: rand(3, 11) });
+  var spark = []; for (var si = 0; si < 44; si++) spark.push(0.5);
+  var sparkT = 0, sparkV = 0.5;
+  var gauge = 0.78, gaugeTo = 0.82, gaugeT = 0;
+
+  function cell(c, r, color, alpha, scale) {
+    dsh.globalAlpha = alpha == null ? 1 : alpha;
+    dsh.fillStyle = color;
+    dsh.beginPath();
+    dsh.arc(D.x + (c + 0.5) * PX, D.y + (r + 0.5) * PY, 0.82 * (scale || 1), 0, 6.283);
+    dsh.fill();
+  }
+  function eyeCells(t) {
+    var cells = [], centers = [];
+    if (face.blinking > 0) face.blinking -= 1 / 60;
+    if (t > face.blinkAt) { face.blinking = 0.14; face.blinkAt = t + rand(2.2, 5); if (Math.random() < 0.25) face.blinkAt = t + 0.35; }
+    var tx, ty;
+    if (performance.now() - ptr.at < 4000) {
+      var rb = dashEl.getBoundingClientRect();
+      var dx = ptr.x - (rb.left + rb.width / 2), dy = ptr.y - (rb.top + rb.height / 2);
+      tx = clamp(dx / 180, -1, 1) * 2; ty = clamp(dy / 140, -1, 1) * 2;
+    } else {
+      if (t > face.lookNext) { face.lookT = Math.random() < 0.5 ? 0 : (Math.random() < 0.5 ? -1.5 : 1.5); face.lookNext = t + rand(1.6, 4.5); }
+      tx = face.lookT; ty = 0;
+    }
+    face.look = lerp(face.look, tx, 0.12);
+    face.lookY = lerp(face.lookY, ty, 0.12);
+    var lx = Math.round(face.look) * 2, ly = Math.round(face.lookY);
+    if (face.mood !== 'idle' && t > face.moodUntil) face.mood = 'idle';
+    if (t > face.moodNext) { face.mood = 'happy'; face.moodUntil = t + rand(1.2, 2.0); face.moodNext = t + rand(6, 10); }
+
+    var eyes = [[13, 8], [37, 8]];   // top-left of each 10x10 eye block
+    for (var e = 0; e < 2; e++) {
+      var ex = eyes[e][0] + lx, ey = eyes[e][1] + ly;
+      centers.push([ex + 5, ey + 5]);
+      if (face.blinking > 0) { for (var c = ex; c < ex + 10; c++) cells.push([c, ey + 4], [c, ey + 5]); }
+      else if (face.mood === 'happy') {
+        for (var hc = 0; hc < 10; hc++) { var u = (hc - 4.5) / 4.5; var hr = ey + 2 + Math.round(3.6 * u * u); cells.push([ex + hc, hr], [ex + hc, hr + 1], [ex + hc, hr + 2]); }
+      } else {
+        for (var cc = 0; cc < 10; cc++) for (var rr = 0; rr < 10; rr++) {
+          var edgeC = (cc === 0 || cc === 9), edgeR = (rr === 0 || rr === 9), nearC = (cc === 1 || cc === 8), nearR = (rr === 1 || rr === 8);
+          if ((edgeC && (edgeR || nearR)) || (edgeR && nearC)) continue;   // rounded corners
+          cells.push([ex + cc, ey + rr]);
+        }
+        cells.push(['glint', ex + 2, ey + 2], ['glint', ex + 3, ey + 2], ['glint', ex + 2, ey + 3]);
+      }
+    }
+    return { cells: cells, centers: centers };
+  }
+  function roundRect(x, y, w, h, r) {
+    dsh.beginPath(); dsh.moveTo(x + r, y); dsh.arcTo(x + w, y, x + w, y + h, r); dsh.arcTo(x + w, y + h, x, y + h, r); dsh.arcTo(x, y + h, x, y, r); dsh.arcTo(x, y, x + w, y, r); dsh.closePath();
+  }
+  function label(txt, col, row, align, size, bright) {
+    dsh.font = (bright ? '600 ' : '500 ') + (size || 2.6) + 'px Inter, system-ui, sans-serif';
+    dsh.textAlign = align; dsh.textBaseline = 'middle';
+    dsh.fillStyle = bright ? '#eafcff' : 'rgba(95,227,255,0.85)';
+    dsh.fillText(txt, D.x + (align === 'right' ? (col + 1) * PX : col * PX), D.y + row * PY);
+  }
+
+  function drawDash(t, dt) {
+    var q = dashQ;
+    dsh.setTransform(q, 0, 0, q, 0, 0);
+    dsh.clearRect(0, 0, 161, 80);
+    dsh.fillStyle = '#0b1018'; dsh.fillRect(0, 0, 161, 80);
+    var bg = dsh.createLinearGradient(0, D.y, 0, D.y + D.h);
+    bg.addColorStop(0, '#0f1c2e'); bg.addColorStop(1, '#0a1522');
+    roundRect(D.x, D.y, D.w, D.h, 2.5); dsh.fillStyle = bg; dsh.fill();
+    dsh.strokeStyle = 'rgba(95,227,255,0.28)'; dsh.lineWidth = 0.5; dsh.stroke();
+    dsh.fillStyle = CYAN_DIM;
+    for (var c = 0; c < COLS; c++) for (var r = 0; r < ROWS; r++) {
+      dsh.beginPath(); dsh.arc(D.x + (c + 0.5) * PX, D.y + (r + 0.5) * PY, 0.5, 0, 6.283); dsh.fill();
+    }
+
+    viewMix = lerp(viewMix, view, 1 - Math.pow(0.0005, dt));
+    var faceA = clamp(1 - viewMix * 1.6, 0, 1), anaA = clamp((viewMix - 0.35) * 1.6, 0, 1);
+
+    sparkT += dt;
+    if (sparkT > 0.22) { sparkT = 0; sparkV = clamp(sparkV + rand(-0.14, 0.14) + (0.55 - sparkV) * 0.1, 0.1, 0.95); spark.push(sparkV); spark.shift(); }
+    barT += dt;
+    if (barT > 1.4) { barT = 0; for (var b = 0; b < bars.length; b++) bars[b].to = rand(3, 12); }
+    for (var b1 = 0; b1 < bars.length; b1++) bars[b1].v = lerp(bars[b1].v, bars[b1].to, 0.06);
+    gaugeT += dt;
+    if (gaugeT > 2.4) { gaugeT = 0; gaugeTo = rand(0.6, 0.94); }
+    gauge = lerp(gauge, gaugeTo, 0.03);
+
+    cell(1, 1, GREEN, 0.55 + 0.45 * (Math.sin(t * 3) > 0 ? 1 : 0));
+    dsh.globalAlpha = 1;
+    label('ROBO-07 · AKTIV', 3, 1.7, 'left');
+
+    /* ===== EYES ===== */
+    if (faceA > 0.01) {
+      var f = eyeCells(t);
+      var pulse = 0.85 + 0.15 * Math.sin(t * 2.1);
+      // soft glow halo behind each eye
+      dsh.save();
+      roundRect(D.x, D.y, D.w, D.h, 2.5); dsh.clip();
+      for (var g = 0; g < f.centers.length; g++) {
+        var gx = D.x + f.centers[g][0] * PX, gy = D.y + f.centers[g][1] * PY;
+        var halo = dsh.createRadialGradient(gx, gy, 2, gx, gy, 26);
+        halo.addColorStop(0, 'rgba(95,227,255,' + (0.42 * pulse * faceA) + ')');
+        halo.addColorStop(0.45, 'rgba(95,227,255,' + (0.14 * pulse * faceA) + ')');
+        halo.addColorStop(1, 'rgba(95,227,255,0)');
+        dsh.fillStyle = halo; dsh.globalAlpha = 1;
+        dsh.beginPath(); dsh.arc(gx, gy, 26, 0, 6.283); dsh.fill();
+      }
+      dsh.restore();
+      // lit dots with bloom
+      dsh.shadowColor = 'rgba(120,235,255,1)'; dsh.shadowBlur = 5 * q / 2;
+      for (var i = 0; i < f.cells.length; i++) { var ce = f.cells[i]; if (ce[0] !== 'glint') cell(ce[0], ce[1], CYAN, faceA, 1.12); }
+      dsh.shadowBlur = 0;
+      // brighter core pass
+      dsh.shadowColor = 'rgba(255,255,255,0.9)'; dsh.shadowBlur = 1.2 * q / 2;
+      for (var i2 = 0; i2 < f.cells.length; i2++) { var c2 = f.cells[i2]; if (c2[0] !== 'glint') cell(c2[0], c2[1], '#c9f6ff', 0.55 * faceA, 0.7); }
+      dsh.shadowBlur = 0;
+      for (var g2 = 0; g2 < f.cells.length; g2++) { var gl2 = f.cells[g2]; if (gl2[0] === 'glint') cell(gl2[1], gl2[2], '#ffffff', faceA, 0.9); }
+      dsh.globalAlpha = faceA * (0.45 + 0.35 * Math.sin(t * 2.4));
+      label('ANALYTICS ▸', 58.4, 25.4, 'right');
+      dsh.globalAlpha = 1;
+    }
+
+    /* ===== ANALYTICS ===== */
+    if (anaA > 0.01) {
+      dsh.save();
+      dsh.globalAlpha = anaA;
+      dsh.translate(0, (1 - anaA) * 6);
+      label('BODENFEUCHTE', 1, 4.2, 'left');
+      label(Math.round(60 + sparkV * 25) + ' %', 58.4, 4.4, 'right', 5.4, true);
+      var gx0 = D.x + 1 * PX, gx1 = D.x + 59 * PX, gy0 = D.y + 6 * PY, gy1 = D.y + 12.6 * PY;
+      dsh.beginPath();
+      for (var s = 0; s < spark.length; s++) {
+        var sx = gx0 + (gx1 - gx0) * s / (spark.length - 1), sy = gy1 - (gy1 - gy0) * spark[s];
+        s ? dsh.lineTo(sx, sy) : dsh.moveTo(sx, sy);
+      }
+      dsh.strokeStyle = CYAN; dsh.lineWidth = 1; dsh.shadowColor = CYAN; dsh.shadowBlur = 3; dsh.stroke(); dsh.shadowBlur = 0;
+      dsh.lineTo(gx1, gy1); dsh.lineTo(gx0, gy1); dsh.closePath();
+      var sg = dsh.createLinearGradient(0, gy0, 0, gy1); sg.addColorStop(0, 'rgba(95,227,255,0.3)'); sg.addColorStop(1, 'rgba(95,227,255,0)');
+      dsh.fillStyle = sg; dsh.fill();
+      var ly2 = gy1 - (gy1 - gy0) * spark[spark.length - 1];
+      dsh.fillStyle = '#fff'; dsh.beginPath(); dsh.arc(gx1, ly2, 1 + 0.4 * Math.sin(t * 6), 0, 6.283); dsh.fill();
+      dsh.fillStyle = 'rgba(95,227,255,0.18)'; dsh.fillRect(D.x + 1 * PX, D.y + 13.6 * PY, 58 * PX, 0.5);
+
+      label('DÜSEN L/MIN', 1, 15.2, 'left');
+      for (var b2 = 0; b2 < bars.length; b2++) {
+        var hgt = Math.round(bars[b2].v * 0.85), col = 1 + b2 * 2.5;
+        for (var rr = 0; rr < hgt; rr++) cell(col, 25 - rr, CYAN, anaA * (rr === hgt - 1 ? 1 : 0.35 + 0.5 * rr / hgt), 1.1);
+      }
+
+      label('ERTRAG', 58.4, 15.2, 'right');
+      var cx = D.x + 53 * PX, cy = D.y + 21 * PY, rad = 8.6;
+      dsh.lineWidth = 1.9; dsh.lineCap = 'round';
+      dsh.strokeStyle = 'rgba(95,227,255,0.16)'; dsh.beginPath(); dsh.arc(cx, cy, rad, 0, 6.283); dsh.stroke();
+      dsh.strokeStyle = GREEN; dsh.shadowColor = GREEN; dsh.shadowBlur = 3;
+      dsh.beginPath(); dsh.arc(cx, cy, rad, -Math.PI / 2, -Math.PI / 2 + gauge * 6.283); dsh.stroke(); dsh.shadowBlur = 0;
+      dsh.fillStyle = '#eafcff'; dsh.font = '600 6px Inter, system-ui, sans-serif'; dsh.textAlign = 'center'; dsh.textBaseline = 'middle';
+      dsh.fillText(Math.round(gauge * 100) + '%', cx, cy + 0.3);
+      label('pH 6,4', 44, 18.6, 'right', 3.2, true);
+      label('21 °C', 44, 21.2, 'right', 3.2, true);
+      label('DRUCK 3,2 bar', 44, 23.8, 'right', 2.6);
+      dsh.restore();
+    }
+
+    /* ---- glass: scanlines + moving glare + vignette ---- */
+    dsh.globalAlpha = 0.07; dsh.fillStyle = '#000';
+    for (var yy = D.y; yy < D.y + D.h; yy += 1.6) dsh.fillRect(D.x, yy, D.w, 0.6);
+    dsh.globalAlpha = 1;
+    var gl = ((t * 0.12) % 1) * (D.w + 60) - 30 + D.x;
+    var gg = dsh.createLinearGradient(gl - 22, 0, gl + 22, 0);
+    gg.addColorStop(0, 'rgba(255,255,255,0)'); gg.addColorStop(0.5, 'rgba(255,255,255,0.06)'); gg.addColorStop(1, 'rgba(255,255,255,0)');
+    roundRect(D.x, D.y, D.w, D.h, 2.5); dsh.fillStyle = gg; dsh.fill();
+    var vg = dsh.createRadialGradient(D.x + D.w / 2, D.y + D.h / 2, D.w * 0.25, D.x + D.w / 2, D.y + D.h / 2, D.w * 0.7);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.35)');
+    roundRect(D.x, D.y, D.w, D.h, 2.5); dsh.fillStyle = vg; dsh.fill();
+  }
+
+  /* ---- loop ---- */
+  var last = performance.now(), t0 = last, started = false;
+  function frame(now) {
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    var t = (now - t0) / 1000; nowT = t;
+    applyStage(video.currentTime || 0);
+    // skip the heavy drawing once the hero is scrolled away
+    var onScreen = section.getBoundingClientRect().bottom > 0 && !document.hidden;
+    if (onScreen) {
+      drawSky(t, dt);
+      drawSprays(t, dt);
+      drawDash(t, dt);
+    }
+    requestAnimationFrame(frame);
+  }
+  function start() {
+    if (started) return; started = true;
+    fx.classList.add('on');
+    last = t0 = performance.now();
+    requestAnimationFrame(frame);
+  }
+  video.addEventListener('playing', start, { once: true });
+  video.addEventListener('loadeddata', function () { setTimeout(start, 400); }, { once: true });
+  setTimeout(start, 2500);
+})();
+</script>
+</body>
+</html>

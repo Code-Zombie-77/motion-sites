@@ -1,0 +1,6 @@
+{
+  "name": "Sichere dir den Look. — Runway",
+  "description": "Sechs kompromisslose Streetwear-Looks. Direkt vom Laufsteg in deine Garderobe – entdecke jedes Piece im Detail.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

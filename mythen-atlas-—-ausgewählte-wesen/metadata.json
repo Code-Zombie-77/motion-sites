@@ -1,0 +1,6 @@
+{
+  "name": "Mythen-Atlas — Ausgewählte Wesen",
+  "description": "Drehen Sie einen Phönix und einen Kraken in Ihren Händen. Ein interaktiver 3D-Naturführer zu Geschöpfen, die niemals existierten.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

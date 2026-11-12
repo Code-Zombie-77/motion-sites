@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tiefenpfad — Höhlentouren in Deutschland</title>
+<meta name="description" content="Höhlentouren in Deutschland vergleichen und anfragen. Mit 3D-Rundgang vor dem Besuch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1b1a17;--soft:#66625a;--line:#e3dfd6;--bg:#faf8f3;--accent:#b6531a;--dark:#14120f}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{font:400 16px/1.5 "Inter Tight",system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:inherit}img{display:block;width:100%;height:100%;object-fit:cover}
+h1,h2,.brand{font-family:"Instrument Serif",Georgia,serif;font-weight:400}
+h2{font-size:clamp(32px,4vw,48px);line-height:1.08}
+.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
+section{padding:84px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 20px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:500 15px "Inter Tight",sans-serif;text-decoration:none;cursor:pointer;transition:background .2s}
+.btn:hover{background:#9a4413}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.top{position:sticky;top:0;z-index:20;background:rgba(250,248,243,.96);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-size:26px;text-decoration:none}
+.top nav{display:flex;gap:26px;font-size:15px}.top nav a{text-decoration:none}.top nav a:hover{color:var(--accent)}
+.hero{position:relative;min-height:min(86vh,760px);padding:0;display:flex;align-items:flex-end;color:#fff;background:var(--dark);overflow:hidden}
+.hero img,.hero iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hero iframe{opacity:0;transition:opacity 1.4s;pointer-events:none}.hero iframe.on{opacity:1}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,6,.3) 0%,rgba(10,8,6,.55) 45%,rgba(10,8,6,.92) 100%)}
+.hero .wrap{position:relative;z-index:2;padding:0 0 42px}
+h1{font-size:clamp(46px,7vw,92px);line-height:1;max-width:13ch;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.hero p{max-width:50ch;margin:16px 0 26px;font-size:clamp(17px,1.5vw,20px);text-shadow:0 1px 10px rgba(0,0,0,.7)}
+.find{display:grid;grid-template-columns:1.3fr 1fr auto;gap:10px;max-width:720px;padding:10px;background:#fff;border-radius:14px;color:var(--ink)}
+label{display:grid;gap:3px;font-size:13px;color:var(--soft)}
+select,input{width:100%;height:44px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font:400 15px "Inter Tight",sans-serif;color:var(--ink)}
+.find .btn{align-self:end}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 28px}
+.chips button{height:38px;padding:0 15px;border:1px solid var(--line);border-radius:99px;background:#fff;font:400 14px "Inter Tight",sans-serif;cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.tour{display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px}
+.tour figure{margin:0;aspect-ratio:4/3;background:#2a2622;overflow:hidden}
+.tour>div{display:flex;flex:1;flex-direction:column;padding:18px}
+.tour h3{font:600 18px/1.25 "Inter Tight",sans-serif}
+.tour p{margin-top:6px;font-size:14.5px;color:var(--soft)}
+.tour .meta{margin-top:12px;font-size:14px}
+.tour .buy{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:16px}
+.tour b{font-size:20px;font-weight:600}.tour small{font-size:13px;color:var(--soft)}
+.tour .btn{height:40px;padding:0 15px}
+.none{padding:26px 0;color:var(--soft)}
+.dark{background:var(--dark);color:#f4f1ea}
+.split{display:grid;grid-template-columns:1fr 1.25fr;gap:56px;align-items:center}
+.split p{margin-top:14px;max-width:46ch;color:#cfc9bd}
+.split .btn{margin-top:22px}
+.shot{display:block;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:#2a2622}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:30px}
+.three h3{font:600 17px "Inter Tight",sans-serif}.three p,.three li{margin-top:6px;font-size:15px;color:var(--soft)}
+ul{padding:0;list-style:none}
+blockquote{font:italic 400 25px/1.25 "Instrument Serif",serif}cite{display:block;margin-top:8px;font:400 14px "Inter Tight",sans-serif;color:var(--soft)}
+.biz{background:#efe9dd}
+.biz p{max-width:58ch;margin:14px 0 22px}
+footer{padding:36px 0;font-size:13px;color:var(--soft);border-top:1px solid var(--line)}
+footer a{margin-right:14px}footer p{margin-top:12px;max-width:90ch}
+dialog{width:min(460px,calc(100% - 28px));padding:26px;border:0;border-radius:16px}dialog::backdrop{background:rgba(10,8,6,.6)}
+dialog h2{font-size:32px;padding-right:24px}dialog form{display:grid;gap:12px;margin-top:14px}
+.total{display:flex;justify-content:space-between;font-weight:600;padding-top:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.x{position:absolute;right:14px;top:10px;border:0;background:none;font-size:26px;cursor:pointer}
+@media(max-width:900px){.grid,.three{grid-template-columns:1fr 1fr}.split{grid-template-columns:1fr;gap:28px}}
+@media(max-width:620px){.grid,.three,.find{grid-template-columns:1fr}.top nav a:not(:first-child){display:none}section{padding:58px 0}.hero{min-height:88vh}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+/* ---- Modern pass ---- */
+:root{--bg:#f5f3ee;--accent:#d2601a;--line:#e4e0d7}
+h1,h2,.brand{font-family:"Inter Tight",sans-serif;font-weight:600;letter-spacing:-.035em}
+h1{font-size:clamp(46px,7.4vw,104px);line-height:.96;max-width:12ch}h2{font-size:clamp(32px,4.2vw,56px);line-height:1.02}
+.brand{font-size:21px}
+.ic{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.top{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(1180px,calc(100% - 24px));border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(18,16,14,.72);color:#fff;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.top .wrap{width:100%;padding:0 20px;height:58px}.top nav a:hover{color:#f2a65a}
+.hero{min-height:100svh}
+.hero .wrap{padding-bottom:52px}
+.find{border-radius:18px}.btn{border-radius:12px;font-weight:600}select,input{border-radius:10px}
+.chips button{border-radius:12px}
+.grid{gap:18px}
+.tour{border:0;border-radius:20px;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s;box-shadow:0 1px 2px rgba(30,24,16,.06)}
+.tour:hover{transform:translateY(-4px);box-shadow:0 18px 40px -18px rgba(30,24,16,.3)}
+.tour figure{aspect-ratio:16/11}
+.tour h3{font-size:20px;letter-spacing:-.015em}
+.tour p.place,.tour .meta span{display:inline-flex;align-items:center;gap:6px}
+.tour .meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--ink)}
+.dark{background:#11100e}.shot{border-radius:20px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:34px 0 0;padding:0;list-style:none}
+.steps li{padding:20px;border-radius:20px;background:#fff}
+.steps .ic{display:block;width:30px;height:30px;margin-bottom:26px;color:var(--accent)}
+.steps h3{font:600 18px "Inter Tight",sans-serif;letter-spacing:-.01em}.steps p{margin-top:6px;font-size:15px;line-height:1.42;color:var(--soft)}
+blockquote{font:500 22px/1.25 "Inter Tight",sans-serif;letter-spacing:-.015em}
+.biz{background:#1d1a16;color:#f4f1ea}.biz p{color:#cfc9bd}
+dialog{border-radius:22px}dialog h2{font-size:30px}
+section[id]{scroll-margin-top:80px}
+@media(max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.steps{grid-template-columns:1fr}.top nav a:not(:first-child){display:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-boot" viewBox="0 0 24 24"><path d="M8 3v9l-3 3v3h15v-2c0-2-2-3-5-4l-2-2V3zM5 21h15"/></symbol>
+<symbol id="i-jacket" viewBox="0 0 24 24"><path d="M9 3 5 5 3 12l3 1v8h12v-8l3-1-2-7-4-2-3 3zM12 6v15"/></symbol>
+<symbol id="i-helmet" viewBox="0 0 24 24"><path d="M4 16a8 8 0 0 1 16 0M2 16h20v2H2zM12 8V4M10 4h4"/></symbol>
+<symbol id="i-low" viewBox="0 0 24 24"><path d="M3 4h18M7 4l1.500 5L10 4M15 4l1 4 1-4M12 21v-5M12 16a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 21l4-3 4 3"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M3 3h18M6 3l2 10 2-10M14 3l1.500 6L17 3M8 20l1-3 1 3M8 21h2M15 14v3"/></symbol>
+<symbol id="i-lamp" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M8 14a6 6 0 1 1 8 0c-1 1-1 2-1 4H9c0-2 0-3-1-4z"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20zM12 10v5M12 17.500v.5"/></symbol>
+<symbol id="i-water" viewBox="0 0 24 24"><path d="M2 9c3-2 4-2 7 0s4 2 6 0 4-2 7 0M2 15c3-2 4-2 7 0s4 2 6 0 4-2 7 0"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24"><path d="M9 7 4 12l5 5M4 12h11a5 5 0 0 1 0 10"/></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.500 7-12a7 7 0 1 0-14 0c0 5.500 7 12 7 12z"/><circle cx="12" cy="9" r="2.500"/></symbol>
+</defs></svg>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#">Tiefenpfad</a>
+  <nav aria-label="Hauptmenü"><a href="#touren">Touren</a><a href="#rundgang">3D-Rundgang</a><a href="#ablauf">Ablauf</a><a href="#anbieter">Für Anbieter</a></nav>
+</div></header>
+<main>
+<section class="hero">
+  <img src="assets/teufelshoehle.jpg" alt="Tropfsteine im Barbarossadom der Teufelshöhle" fetchpriority="high">
+  <iframe id="bg" title="" aria-hidden="true" tabindex="-1"></iframe>
+  <div class="wrap">
+    <h1>Höhlentouren in Deutschland</h1>
+    <p>Sechs Schauhöhlen, vom Harz bis zur Schwäbischen Alb. Sehen Sie sich drinnen um, bevor Sie buchen.</p>
+    <form class="find" id="find">
+      <label>Region<select id="region"><option value="">Ganz Deutschland</option></select></label>
+      <label>Datum<input type="date" id="fdate"></label>
+      <button class="btn">Touren zeigen</button>
+    </form>
+  </div>
+</section>
+
+<section id="touren"><div class="wrap">
+  <h2>Touren</h2>
+  <div class="chips" id="chips" role="group" aria-label="Filter"></div>
+  <div class="grid" id="grid"></div>
+  <p class="none" id="none" hidden>Dafür haben wir gerade keine Tour. Probieren Sie eine andere Region.</p>
+</div></section>
+
+<section class="dark" id="rundgang"><div class="wrap split">
+  <div>
+    <h2>Gehen Sie erst einmal digital hinein</h2>
+    <p>Wie eng wird es? Wie dunkel ist es? Im Rundgang gehen Sie den Weg vom Wald bis in die Halle, am Handy oder am Rechner.</p>
+    <a class="btn" href="rundgang.html">Rundgang starten</a>
+  </div>
+  <a class="shot" href="rundgang.html" aria-label="3D-Rundgang starten"><img loading="lazy" src="assets/feengrotten.jpg" alt="Farbige Tropfsteine in den Saalfelder Feengrotten"></a>
+</div></section>
+
+<section id="ablauf"><div class="wrap">
+  <h2>Ihre Tour, Schritt für Schritt</h2>
+  <ol class="steps">
+    <li><svg class="ic" aria-hidden="true"><use href="#i-boot"/></svg><h3>Waldweg</h3><p>Wurzeln sind nass und glatt. Nehmen Sie Schuhe mit Profil.</p></li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-jacket"/></svg><h3>Hohlweg</h3><p>Hier wird es kühler. Ziehen Sie die Jacke schon jetzt an.</p></li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-helmet"/></svg><h3>Eingang</h3><p>Helm festziehen, Lampe prüfen. Danach geht es los.</p></li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-low"/></svg><h3>Enge Stellen</h3><p>Der Guide sagt niedrige Stellen an. Gehen Sie dort langsam.</p></li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-drop"/></svg><h3>Tropfsteine</h3><p>Bitte nicht anfassen. Hautfett kann ihr Wachstum stoppen.</p></li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-lamp"/></svg><h3>Licht aus</h3><p>Bleiben Sie stehen, wenn die Lampen ausgehen. Der Guide bleibt bei Ihnen.</p></li>
+    <li><svg class="ic" aria-hidden="true"><use href="#i-water"/></svg><h3>Am See</h3><p>Der Rand ist rutschig. Bleiben Sie auf dem Weg.</p></li>
+    <li class="cancel"><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg><h3>Stornieren</h3><p>Bis 24 Stunden vorher kostenlos. Bei Hochwasser bekommen Sie Ihr Geld zurück.</p></li>
+  </ol>
+</div></section>
+
+<section style="background:#fff"><div class="wrap">
+  <div class="three" style="margin:0">
+    <blockquote>„Unsere Tochter wollte danach sofort noch mal rein.“<cite>Anna, Reutlingen</cite></blockquote>
+    <blockquote>„Dank Rundgang wusste ich, dass die Enge für mich machbar ist.“<cite>Jens, Halle</cite></blockquote>
+    <blockquote>„Jacke mitnehmen. Mehr muss man nicht wissen.“<cite>Maren, Bamberg</cite></blockquote>
+  </div>
+</div></section>
+
+<section class="biz" id="anbieter"><div class="wrap">
+  <h2>Sie führen selbst Gäste durch eine Höhle?</h2>
+  <p>Fotos zeigen, wie es aussieht. Ein 3D-Rundgang zeigt, wie es sich anfühlt, bevor jemand anreist. Wir bauen das für Ihre Tour, zusammen mit Terminen und Anfragen, direkt auf Ihrer Website. Diese Seite ist ein Beispiel dafür.</p>
+  <a class="btn" href="mailto:hallo@example.com?subject=3D-Rundgang%20f%C3%BCr%20unsere%20Tour">Schreiben Sie uns</a>
+</div></section>
+</main>
+<footer><div class="wrap">
+  <a href="#">Impressum</a><a href="#">Datenschutz</a><a href="#">AGB</a>
+  <p>Beispielseite. Preise, Zeiten und Stimmen sind Muster, keine Angebote der genannten Höhlen. Die 3D-Szene ist frei gestaltet und zeigt keine dieser Höhlen.</p>
+  <p id="credits">Fotos über Wikimedia Commons: Ermell (CC BY-SA 4.0), Llez (CC BY-SA 3.0), Goldmull (CC BY-SA 4.0), Ansgar Koreng (CC BY 3.0 DE), H. Zell (CC BY-SA 3.0), Flux Garden (CC BY-SA 3.0). Verkleinert.</p>
+</div></footer>
+
+<dialog id="dlg">
+  <button class="x" id="dx" aria-label="Schließen">×</button>
+  <h2 id="dt"></h2>
+  <form id="bk">
+    <div class="row"><label>Datum<input type="date" id="bd" required></label><label>Personen<input type="number" id="bp" min="1" max="12" value="2" required></label></div>
+    <label>Name<input id="bn" autocomplete="name" required></label>
+    <label>E-Mail<input type="email" id="be" autocomplete="email" required></label>
+    <div class="total"><span>Gesamt</span><span id="bt"></span></div>
+    <button class="btn">Anfrage senden</button>
+  </form>
+  <p id="ok" hidden></p>
+</dialog>
+
+<script>
+const T=[
+ {n:'Teufelshöhle',o:'Pottenstein, Fränkische Schweiz',r:'Franken',d:'45 Min.',p:9,i:'teufelshoehle',a:'Große Halle mit Tropfsteinen',t:['Für Kinder'],x:'Große Tropfsteine und das Skelett eines Höhlenbären.'},
+ {n:'Bärenhöhle',o:'Sonnenbühl, Schwäbische Alb',r:'Schwäbische Alb',d:'35 Min.',p:7,i:'baerenhoehle',a:'Felsdecke in der Bärenhöhle',t:['Für Kinder','Kurz'],x:'Ein kurzer Weg und Knochen von Höhlenbären.'},
+ {n:'Baumannshöhle',o:'Rübeland, Harz',r:'Harz',d:'60 Min.',p:10,i:'baumannshoehle',a:'Eingangsgebäude der Baumannshöhle',t:['Für Kinder'],x:'Eine der ältesten Schauhöhlen Deutschlands.'},
+ {n:'Saalfelder Feengrotten',o:'Saalfeld, Thüringen',r:'Thüringen',d:'50 Min.',p:13,i:'feengrotten',a:'Farbige Tropfsteine im Märchendom',t:['Für Kinder'],x:'Ein altes Bergwerk mit farbigen Tropfsteinen.'},
+ {n:'Wimsener Höhle',o:'Hayingen, Schwäbische Alb',r:'Schwäbische Alb',d:'20 Min.',p:6,i:'wimsen',a:'Wasser in der Wimsener Höhle',t:['Mit Boot','Kurz'],x:'Sie fahren mit dem Boot hinein.'},
+ {n:'Dechenhöhle',o:'Iserlohn, Sauerland',r:'Sauerland',d:'45 Min.',p:9,i:'dechenhoehle',a:'Gang in der Dechenhöhle',t:['Für Kinder'],x:'Mit der Bahn gut erreichbar.'}];
+const $=s=>document.querySelector(s),eur=n=>n.toLocaleString('de-DE',{style:'currency',currency:'EUR'});
+let tag='Alle',cur=null;
+[...new Set(T.map(t=>t.r))].forEach(r=>$('#region').add(new Option(r,r)));
+const tags=['Alle','Für Kinder','Mit Boot','Kurz'];
+function chips(){$('#chips').innerHTML=tags.map(t=>`<button aria-pressed="${t===tag}">${t}</button>`).join('')}
+function draw(){const r=$('#region').value,l=T.filter(t=>(!r||t.r===r)&&(tag==='Alle'||t.t.includes(tag)));
+ $('#none').hidden=l.length>0;
+ $('#grid').innerHTML=l.map(t=>`<article class="tour"><figure><img loading="lazy" src="assets/${t.i}.jpg" alt="${t.a}"></figure><div><h3>${t.n}</h3><p class="place"><svg class="ic" aria-hidden="true"><use href="#i-pin"/></svg>${t.o}</p><p>${t.x}</p><p class="meta"><span><svg class="ic" aria-hidden="true"><use href="#i-clock"/></svg>${t.d}</span><span><svg class="ic" aria-hidden="true"><use href="#i-back"/></svg>24 h stornierbar</span></p><span class="buy"><span><small>ab </small><b>${eur(t.p)}</b></span><button class="btn" data-t="${T.indexOf(t)}">Termin wählen</button></span></div></article>`).join('')}
+$('#chips').onclick=e=>{if(e.target.tagName==='BUTTON'){tag=e.target.textContent;chips();draw()}};
+$('#find').onsubmit=e=>{e.preventDefault();draw();$('#touren').scrollIntoView()};
+$('#region').onchange=draw;
+const today=new Date().toISOString().slice(0,10);$('#fdate').min=today;$('#bd').min=today;
+const sum=()=>{$('#bt').textContent=eur(cur.p*Math.max(1,+$('#bp').value||1))};
+$('#grid').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;cur=T[+b.dataset.t];$('#dt').textContent=cur.n;$('#bd').value=$('#fdate').value;$('#bk').hidden=false;$('#ok').hidden=true;sum();$('#dlg').showModal()};
+$('#bp').oninput=sum;$('#dx').onclick=()=>$('#dlg').close();
+$('#bk').onsubmit=e=>{e.preventDefault();$('#bk').hidden=true;const o=$('#ok');o.hidden=false;o.textContent=`Danke, ${$('#bn').value}. Wir melden uns per E-Mail zu Ihrem Termin am ${new Date($('#bd').value).toLocaleDateString('de-DE')}.`};
+chips();draw();
+/* The 3D cave loads after the page, and only on desktops without reduced motion or data saving */
+const bg=$('#bg');
+if(innerWidth>900&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!(navigator.connection&&navigator.connection.saveData)){
+ addEventListener('load',()=>setTimeout(()=>{bg.onload=()=>setTimeout(()=>bg.classList.add('on'),1500);bg.src='rundgang.html?embed';
+  new IntersectionObserver(es=>bg.contentWindow&&bg.contentWindow.postMessage(es[0].isIntersecting?'play':'pause','*')).observe(bg)},600));
+}
+</script>
+</body>
+</html>

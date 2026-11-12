@@ -1,0 +1,19 @@
+# dependencies & builds
+node_modules/
+dist/
+.netlify/
+.env*
+!.env.example
+
+# large media (kept on disk, not in git)
+Motion-site-reels/
+wendland-bibliothek/reels/src/
+wendland-bibliothek/reels/clips/
+wendland-bibliothek/reels/out/
+*.zip
+*.MOV
+*.mov
+
+# OS
+Thumbs.db
+.DS_Store
