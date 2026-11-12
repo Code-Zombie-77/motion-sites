@@ -1,0 +1,5 @@
+# Static deploy of all motion sites. No build step:
+# plain sites are served as-is, Vite sites from their committed dist/ folders.
+[build]
+  publish = "."
+  command = ""

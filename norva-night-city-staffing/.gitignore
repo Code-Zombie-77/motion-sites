@@ -1,6 +1,6 @@
 node_modules/
 build/
-dist/
+# dist/  (committed so Netlify can serve the built site)
 coverage/
 .DS_Store
 *.log

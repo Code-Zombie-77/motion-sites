@@ -1,6 +1,5 @@
 # dependencies & builds
 node_modules/
-dist/
 .netlify/
 .env*
 !.env.example
