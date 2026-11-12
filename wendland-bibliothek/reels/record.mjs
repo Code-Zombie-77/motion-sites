@@ -6,7 +6,7 @@ import path from "path";
 
 const ROOT = "D:/Websites/motion-sites";
 const SITES = [
-  ["kv-fracht", "kv"], ["wendland-bibliothek", "wb"], ["sichere-dir-den-look.-—-runway", "rw"],
+  ["kv-fracht", "kv"], ["wendland-bibliothek", "wb"], ["runway", "rw"],
   ["tiefenpfad", "tp"], ["nektarlinie", "nl"], ["kernwald", "kw"],
 ];
 const OUT = path.resolve("rec"); fs.mkdirSync(OUT, { recursive: true });
